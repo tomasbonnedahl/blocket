@@ -11,12 +11,15 @@ version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 //    compile "org.seleniumhq.selenium:selenium-java:2.41.0"
     compile "org.jsoup:jsoup:1.11.3"
+    compile 'org.jetbrains.exposed:exposed:0.17.2'
+    compile 'org.xerial:sqlite-jdbc:3.25.2'
 }
 
 compileKotlin {

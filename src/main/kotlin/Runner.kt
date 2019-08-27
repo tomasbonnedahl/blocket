@@ -1,3 +1,8 @@
+import org.jetbrains.exposed.dao.IntIdTable
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.jsoup.Jsoup
 import java.time.LocalDate
 
@@ -24,27 +29,16 @@ fun main(args: Array<String>) {
         println("-------------")
         println(it)
 
-        val price = it.select("p.list_price").
-            text().
-            substringBefore("kr").
-            replace(" ", "").
-            toInt()
+        val price = it.select("p.list_price").text().substringBefore("kr").replace(" ", "").toInt()
 
-        val info = it.select("p.motor-li-thumb-extra-info").
-            text().
-            split(" | ")
+        val info = it.select("p.motor-li-thumb-extra-info").text().split(" | ")
 
         val (fuel, gearbox, milageTemp) = info
-        val milage = milageTemp.replace("mil", "").
-            split("-").
-            last().
-            replace(" ", "")
+        val milage = milageTemp.replace("mil", "").split("-").last().replace(" ", "")
 
         println("info = ${info}")
         val dateAdded = LocalDate.parse(
-            it.select("time").attr("datetime").
-            split(" ").
-            first()
+            it.select("time").attr("datetime").split(" ").first()
         )
 
         val title = it.select("a[href]").attr("title")
@@ -56,5 +50,8 @@ fun main(args: Array<String>) {
         println("fuel = ${fuel}")
         println("gearbox = ${gearbox}")
         println("milage = ${milage}")
+        // TODO: Year of car (use different URLs instead of parsing)
     }
+
+    apa()
 }
