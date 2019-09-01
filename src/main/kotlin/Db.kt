@@ -1,3 +1,4 @@
+import org.h2.engine.Domain
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert
@@ -17,6 +18,7 @@ fun createDbFile(): File {
     return file
 }
 
+// TODO: Should be an interface?
 class Db {
     init {
         val file = createDbFile()
@@ -52,6 +54,30 @@ class Db {
                     car[model_year] = 2018
                     car[url] = url2
                 }
+            }
+        }
+    }
+
+    fun addDomainCar(domainCar: DomainCar) {
+        if (domainCar.price == 0) {
+            return
+        }
+
+        if (domainCar.title.contains("RS")) {
+            return
+        }
+
+        transaction {
+            Car.insert { car ->
+                car[brand] = domainCar.brand
+                car[title] = domainCar.title
+                car[fuel] = domainCar.fuel
+                car[gearbox] = domainCar.gearbox
+                car[milage] = domainCar.milage
+                car[price] = domainCar.price
+                car[date_added] = DateTime.parse(domainCar.date_added.toString())
+                car[model_year] = domainCar.model_year
+                car[url] = domainCar.url
             }
         }
     }
