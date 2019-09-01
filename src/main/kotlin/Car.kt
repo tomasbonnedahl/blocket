@@ -9,5 +9,5 @@ object Car : IntIdTable() {
     val price = integer("price")
     val date_added = date("date_added")
     val model_year = integer("model_year")
-    val unique_id = varchar("unique_id", 200)
+    val url = varchar("url", 200)
 }

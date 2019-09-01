@@ -34,10 +34,10 @@ class Db {
     fun add() {
         println("Adding to db")
         transaction {
-            val uniqueId2 = "Skoda Kodiaq" + 1234 + 299000
+            val url2 = "https://www.blocket.se/afsas"
 
             val existing = Car.select {
-                Car.unique_id eq uniqueId2
+                Car.url eq url2
             }.count()
 
             if (existing == 0) {
@@ -50,7 +50,7 @@ class Db {
                     car[price] = 299000
                     car[date_added] = DateTime.parse(LocalDate.of(2018, 1, 1).toString())
                     car[model_year] = 2018
-                    car[unique_id] = uniqueId2
+                    car[url] = url2
                 }
             }
         }
@@ -69,7 +69,7 @@ class Db {
                 println("it.get(Car.price) = ${it.get(Car.price)}")
                 println("it.get(Car.date_added) = ${it.get(Car.date_added)}")
                 println("it.get(Car.model_year) = ${it.get(Car.model_year)}")
-                println("it.get(Car.unique_id) = ${it.get(Car.unique_id)}")
+                println("it.get(Car.url) = ${it.get(Car.url)}")
             }
         }
     }

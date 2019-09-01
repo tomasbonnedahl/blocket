@@ -28,9 +28,12 @@ fun main(args: Array<String>) {
         val fuelGearboxMilage = it.select("p.motor-li-thumb-extra-info").text().split(" | ")
         val (fuel, gearbox, milageTemp) = fuelGearboxMilage
         val milage = milageTemp.replace("mil", "").split("-").last().replace(" ", "")
+        val url = it.select("h1.h5").select("a[href]").attr("href")
         val dateAdded = LocalDate.parse(
             it.select("time").attr("datetime").split(" ").first()
         )
+
+        println("mediaBody = ${mediaBody}")
 
         println("---")
         println("title = ${title}")
@@ -39,11 +42,11 @@ fun main(args: Array<String>) {
         println("fuel = ${fuel}")
         println("gearbox = ${gearbox}")
         println("milage = ${milage}")
-        // TODO: Year of car (use different URLs instead of parsing)
+        println("url = ${url}")
     }
 
 //    insertToDb()
     val db = Db()
-    db.add()
+    db.add()  // TODO: Remove RS (caps) models
     db.list()
 }
