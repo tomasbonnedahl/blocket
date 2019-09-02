@@ -1,5 +1,4 @@
 import org.jsoup.Jsoup
-import java.time.LocalDate
 
 class Runner2(val configuration: Configuration) {
     fun run() {
@@ -9,7 +8,6 @@ class Runner2(val configuration: Configuration) {
             val doc = Jsoup.connect(configuration.urlForYear(year)).get()
             val carListing = doc.select(configuration.section)
             carListing.forEach { element ->
-                println("element = ${element}")
                 val car = DomainCar(
                     brand = configuration.getFieldByName("brand").parseString(element),
                     title = configuration.getFieldByName("title").parseString(element),
@@ -24,6 +22,7 @@ class Runner2(val configuration: Configuration) {
                 db.addDomainCar(car)
             }
         }
-        db.list()
+//        db.list()
+        db.priceVsMilage()
     }
 }

@@ -1,6 +1,6 @@
-import org.h2.engine.Domain
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
@@ -10,7 +10,6 @@ import org.joda.time.DateTime
 import org.sqlite.SQLiteDataSource
 import java.io.File
 import java.sql.Connection
-import java.time.LocalDate
 
 fun createDbFile(): File {
     var file = File("foo.db")
@@ -33,32 +32,8 @@ class Db {
         }
     }
 
-    fun add() {
-        println("Adding to db")
-        transaction {
-            val url2 = "https://www.blocket.se/afsas"
-
-            val existing = Car.select {
-                Car.url eq url2
-            }.count()
-
-            if (existing == 0) {
-                Car.insert { car ->
-                    car[brand] = "Skoda"
-                    car[title] = "Skoda Kodiaq"
-                    car[fuel] = "Diesel"
-                    car[gearbox] = "Automat"
-                    car[milage] = 1234
-                    car[price] = 299000
-                    car[date_added] = DateTime.parse(LocalDate.of(2018, 1, 1).toString())
-                    car[model_year] = 2018
-                    car[url] = url2
-                }
-            }
-        }
-    }
-
     fun addDomainCar(domainCar: DomainCar) {
+        // TODO: Add exclusion filter separate from this class
         if (domainCar.price == 0) {
             return
         }
@@ -67,17 +42,23 @@ class Db {
             return
         }
 
+        println("Adding ${domainCar.title}")
         transaction {
-            Car.insert { car ->
-                car[brand] = domainCar.brand
-                car[title] = domainCar.title
-                car[fuel] = domainCar.fuel
-                car[gearbox] = domainCar.gearbox
-                car[milage] = domainCar.milage
-                car[price] = domainCar.price
-                car[date_added] = DateTime.parse(domainCar.date_added.toString())
-                car[model_year] = domainCar.model_year
-                car[url] = domainCar.url
+            val existing = Car.select {
+                Car.url eq domainCar.url
+            }.count() > 0
+            if (!existing) {
+                Car.insert { car ->
+                    car[brand] = domainCar.brand
+                    car[title] = domainCar.title
+                    car[fuel] = domainCar.fuel
+                    car[gearbox] = domainCar.gearbox
+                    car[milage] = domainCar.milage
+                    car[price] = domainCar.price
+                    car[date_added] = DateTime.parse(domainCar.date_added.toString())
+                    car[model_year] = domainCar.model_year
+                    car[url] = domainCar.url
+                }
             }
         }
     }
@@ -96,6 +77,24 @@ class Db {
                 println("it.get(Car.date_added) = ${it.get(Car.date_added)}")
                 println("it.get(Car.model_year) = ${it.get(Car.model_year)}")
                 println("it.get(Car.url) = ${it.get(Car.url)}")
+            }
+        }
+    }
+
+    fun priceVsMilage() {
+        transaction {
+            val query = Car.select {
+                Car.model_year eq 2018
+            }.andWhere {
+                Car.fuel eq "Diesel"
+            }.sortedBy {
+                it.get(Car.milage)
+            }
+            println("query.count() = ${query.count()}")
+
+//            val query = Car.selectAll()
+            query.forEach {
+                println("${it.get(Car.milage)}, ${it.get(Car.price)}")
             }
         }
     }
