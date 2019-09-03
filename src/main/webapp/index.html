@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Fetch API</title>
+</head>
+<body>
+    <canvas id="myChart"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+                labels: [
+                1783,
+                2200,
+                2815,
+                3298,
+                4374,
+                4438,
+                4752,
+                4995,
+                ],
+                datasets: [{
+                    label: '2018 August',
+                    <!--backgroundColor: 'rgb(255, 99, 132)',-->
+                    borderColor: 'rgb(255, 99, 132)',
+                    <!--data: [0, 10, 5]-->
+                    data: [{ x: 0, y: 323000 },
+                    { x: 1200, y: 322000 },
+                    { x: 4000, y: 321000 },
+                    { x: 5000, y: 320000
+                    }]
+                    }, {
+                    label: '2017 August',
+                    <!--backgroundColor: 'rgb(23, 23, 132)',-->
+                    borderColor: 'rgb(23, 23, 132)',
+                    <!--data: [0, 10, 5]-->
+                    data: [
+                    { x: 1783, y: 339900 },
+                    { x: 2200, y: 339900 },
+                    { x: 2815, y: 339900 },
+                    { x: 3298, y: 339900 },
+                    { x: 4374, y: 334900 },
+                    { x: 4438, y: 329900 },
+                    { x: 4752, y: 324900 },
+                    { x: 4995, y: 334900 },
+                    ]
+                }]
+            },
+
+            // Configuration options go here
+            options: {
+                legend: {
+                      display: true,
+                      position: 'bottom',
+                      labels: {
+                        fontColor: "#000080",
+                      }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

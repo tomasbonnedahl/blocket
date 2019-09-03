@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+    <cron>
+        <url>/fetch-new-data</url>
+<!--        <target>beta</target>-->
+        <description>fetching new data</description>
+        <schedule>every 2 minutes</schedule>
+    </cron>
+</cronentries>
