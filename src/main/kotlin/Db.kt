@@ -16,7 +16,8 @@ import java.time.LocalDate
 
 fun createDbFile(): File {
     var file = File("foo.db")
-    file.createNewFile()
+    val created = file.createNewFile()
+    println("created new db file = ${created}")
     return file
 }
 

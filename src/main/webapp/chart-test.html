@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>apa</title>
+</head>
+<body>
+<canvas id="myChart"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var scatterChart = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+        datasets: [{
+            label: 'Scatter Dataset',
+            borderColor: 'rgb(255, 99, 132)',
+            data: [{
+                x: 0,
+                y: 300
+            }, {
+                x: 10,
+                y: 289
+            }, {
+                x: 100,
+                y: 200
+            }]
+        }]
+    },
+    options: {
+        scales: {
+            xAxes: [{
+                type: 'linear',
+                position: 'bottom'
+            }]
+        },
+        legend: {
+            display: true,
+            position: 'bottom',
+            labels: {
+                fontColor: "#000080",
+            }
+        }
+
+    }
+});
+</script>
+</body>
+</html>
