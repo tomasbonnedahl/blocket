@@ -34,6 +34,11 @@ class Db {
 
     fun addDomainCar(domainCar: DomainCar) {
         // TODO: Add exclusion filter separate from this class
+        /*
+        .map { runExclusionFilters(it) }
+            .filter { it != null }
+            .forEach { store(it) }
+         */
         if (domainCar.price == 0) {
             return
         }
@@ -47,6 +52,7 @@ class Db {
             val existing = Car.select {
                 Car.url eq domainCar.url
             }.count() > 0
+
             if (!existing) {
                 Car.insert { car ->
                     car[brand] = domainCar.brand

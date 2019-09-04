@@ -13,6 +13,7 @@ import kotlinx.html.body
 import kotlinx.html.head
 import kotlinx.html.p
 import kotlinx.html.title
+import org.jetbrains.exposed.sql.selectAll
 import java.io.File
 
 // Entry Point of the application as defined in resources/application.conf.
@@ -41,6 +42,10 @@ fun Application.main() {
 
         get("/json-data") {
             // TODO: Called from JS, return data from db file
+
+            /*
+            Car.slice(Car.milage, Car.price).selectAll().orderBy(Car.milage to SortOrder.ASC)
+             */
         }
     }
 }

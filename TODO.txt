@@ -1,0 +1,17 @@
+- Use a data class with the data we want in the JSON and seralize that object
+    using JacksonJSON?
+    https://github.com/ktorio/ktor-samples/blob/master/feature/gson/src/GsonApplication.kt
+    https://github.com/ktorio/ktor-samples/blob/master/feature/jackson/src/JacksonApplication.kt
+- Add /{brand} (e.g. /skoda, /opel) and /skoda/diesel, /skoda/2018/diesel
+- Use messaging/events/pub-sub to start the "e-mail new cars" after the
+    fetching job completes
+    https://codelabs.developers.google.com/codelabs/cloud-spring-cloud-gcp-kotlin/#0
+- Rewrite using spring boot instead? Req. GAE flexible?
+    https://cloud.google.com/community/tutorials/kotlin-springboot-app-engine-java8
+    https://www.baeldung.com/spring-boot-google-app-engine
+- Use cron.yaml instead of cron.xml?
+    https://cloud.google.com/appengine/docs/standard/java/config/cronref-yaml
+- Use DAO (ORM)
+    https://www.baeldung.com/kotlin-exposed-persistence
+- Add to Github?
+- Netflix/Imdb
