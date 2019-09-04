@@ -11,60 +11,30 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script>
         function plotIt(theXYPoints) {
-            console.log("Type: " + typeof theXYPoints);
-            theXYPoints.map(function(el) {
-                console.log(el);
-            });
-            onlyXValues = theXYPoints.map(function(el) {
-                return el.x;
-            });
             var ctx = document.getElementById('myChart').getContext('2d');
             var chart = new Chart(ctx, {
                 type: 'scatter',
-
-                // The data for our dataset
                 data: {
-<!--                    labels: [-->
-<!--                    1783,-->
-<!--                    2200,-->
-<!--                    2815,-->
-<!--                    3298,-->
-<!--                    4374,-->
-<!--                    4438,-->
-<!--                    4752,-->
-<!--                    4995,-->
-<!--                    ],-->
-<!--                    labels: onlyXValues,-->
                     datasets: [{
-                        label: '2018 August',
-                        <!--backgroundColor: 'rgb(255, 99, 132)',-->
-                        borderColor: 'rgb(255, 99, 132)',
-                        <!--data: [0, 10, 5]-->
-                        data: [{ x: 0, y: 323000 },
-                        { x: 1200, y: 322000 },
-                        { x: 4000, y: 321000 },
-                        { x: 5000, y: 320000
-                        }]
-                        }, {
                         label: 'Actual data',
                         <!--backgroundColor: 'rgb(255, 99, 132)',-->
                         borderColor: 'rgb(255, 99, 132)',
                         <!--data: [0, 10, 5]-->
                         data: theXYPoints
-                        }, {
+                    }, {
                         label: '2017 August',
                         <!--backgroundColor: 'rgb(23, 23, 132)',-->
                         borderColor: 'rgb(23, 23, 132)',
                         <!--data: [0, 10, 5]-->
                         data: [
-                        { x: 1783, y: 339900 },
-                        { x: 2200, y: 339900 },
-                        { x: 2815, y: 339900 },
-                        { x: 3298, y: 339900 },
-                        { x: 4374, y: 334900 },
-                        { x: 4438, y: 329900 },
-                        { x: 4752, y: 324900 },
-                        { x: 4995, y: 334900 },
+                        { x: 1783, y: 329900 },
+                        { x: 2200, y: 329900 },
+                        { x: 2815, y: 329900 },
+                        { x: 3298, y: 329900 },
+                        { x: 4374, y: 324900 },
+                        { x: 4438, y: 319900 },
+                        { x: 4752, y: 314900 },
+                        { x: 4995, y: 324900 },
                         ]
                     }]
                 },
@@ -80,7 +50,6 @@
                     }
                 }
             });
-
         }
 
         const url = 'http://localhost:8080/json-data'
@@ -88,33 +57,10 @@
             .then((resp) => resp.json())
             .then(function(data) {
                 let theData = data.data;
-                console.log("Type: " + typeof theData);
-                console.log("toString: " + Object.prototype.toString.call(theData));
-                console.log("Name: " + theData.constructor.name);
-                console.log(theData);
-
-                newApa = theData.map(function(elemm) {
+                xyPoints = theData.map(function(elemm) {
                     return {'x': elemm.milage, 'y': elemm.price};
                 });
-
-                newApa.map(function(elemm) {
-                    console.log(elemm);
-                    console.log(elemm.x);
-                    console.log(elemm.y);
-                });
-
-                console.log("Size of newApa: " + newApa.length);
-                plotIt(newApa);
-<!--                return authors.map(function(author) {-->
-<!--                  let li = createNode('li'),-->
-<!--                      img = createNode('img'),-->
-<!--                      span = createNode('span');-->
-<!--                  img.src = author.picture.medium;-->
-<!--                  span.innerHTML = `${author.name.first} ${author.name.last}`;-->
-<!--                  append(li, img);-->
-<!--                  append(li, span);-->
-<!--                  append(ul, li);-->
-<!--                })-->
+                plotIt(xyPoints);
             })
             .catch(function(error) {
             console.log(JSON.stringify(error));
