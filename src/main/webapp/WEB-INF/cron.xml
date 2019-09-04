@@ -4,6 +4,6 @@
         <url>/fetch-new-data</url>
 <!--        <target>beta</target>-->
         <description>fetching new data</description>
-        <schedule>every 2 minutes</schedule>
+        <schedule>every 2 hours</schedule>
     </cron>
 </cronentries>

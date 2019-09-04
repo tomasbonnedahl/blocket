@@ -10,4 +10,5 @@ object Car : IntIdTable() {
     val date_added = date("date_added")
     val model_year = integer("model_year")
     val url = varchar("url", 200)
+    val emailed = bool("emailed")
 }

@@ -33,6 +33,7 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compile "io.ktor:ktor-server-servlet:$ktor_version"
     compile "io.ktor:ktor-html-builder:$ktor_version"
+    compile "io.ktor:ktor-gson:$ktor_version"
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compile "org.jsoup:jsoup:1.11.3"
