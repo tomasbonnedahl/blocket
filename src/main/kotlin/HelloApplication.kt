@@ -1,5 +1,4 @@
 import com.google.auth.Credentials
-import com.google.auth.appengine.AppEngineCredentials
 import com.google.cloud.storage.BucketInfo
 import io.ktor.application.Application
 import io.ktor.application.call
