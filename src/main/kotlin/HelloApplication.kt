@@ -1,6 +1,7 @@
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
+import io.ktor.features.CORS
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
@@ -51,6 +52,7 @@ fun Application.main() {
     install(DefaultHeaders)
     // This uses use the logger to log every call (request/response)
     install(CallLogging)
+    install(CORS)
 
     install(ContentNegotiation) {
         gson {
