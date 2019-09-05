@@ -1,3 +1,6 @@
+import com.google.auth.Credentials
+import com.google.auth.appengine.AppEngineCredentials
+import com.google.cloud.storage.BucketInfo
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -17,6 +20,18 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.io.File
 import java.text.DateFormat
 import java.time.LocalDate
+import com.google.cloud.storage.Storage.BucketListOption
+import com.google.cloud.storage.StorageOptions
+import io.ktor.html.respondHtml
+import kotlinx.html.head
+import kotlinx.html.body
+import kotlinx.html.p
+import kotlinx.html.title
+import org.apache.http.client.methods.RequestBuilder.head
+import java.io.FileInputStream
+import com.google.auth.oauth2.GoogleCredentials
+
+
 
 data class Model(
     val name: String,
@@ -98,6 +113,43 @@ fun Application.main() {
             catch (e: java.lang.Exception) {
                 println("Tomas e = ${e}")
                 call.respond(HttpStatusCode.NotFound)
+            }
+        }
+
+        get("/list-buckets") {
+            val storage = StorageOptions.getDefaultInstance().getService()
+//            val storage = StorageOptions.
+//                newBuilder().
+//                setProjectId("nimble-sylph-251712").
+//                build().
+//                service
+//            val credentials = GoogleCredentials.fromStream(
+//                FileInputStream("/Users/tomasb/gcp-key/Blocket-85796bf414a3.json")
+//            )
+//                .createScoped(listOf("https://www.googleapis.com/auth/cloud-platform"))
+//            val storage = StorageOptions.newBuilder().setCredentials(credentials).build().service
+
+            val buckets = storage.list()
+//            for (bucket in buckets.iterateAll()) {
+//                val blobs = bucket.list()
+//                for (blob in blobs.iterateAll()) {
+//                    // do something with the blob
+//                }
+//            }
+
+            val str = buckets.iterateAll().map {bucket ->
+                bucket.name
+            }
+
+            call.respondHtml {
+                head {
+                    title { +"GCP buckets" }
+                }
+                body {
+                    p {
+                        +str.joinToString(", ")
+                    }
+                }
             }
         }
     }
