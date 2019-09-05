@@ -56,7 +56,7 @@ fun Application.main() {
 
     install(ContentNegotiation) {
         gson {
-            setDateFormat(DateFormat.LONG)
+            setDateFormat(DateFormat.LONG)  // TODO: Change to Simple?
             setPrettyPrinting()
         }
     }
@@ -82,16 +82,23 @@ fun Application.main() {
         }
 
         get("/json-data") {
-            // TODO: Abtract some of this code
-            val db = Db()
-            val cars = db.getCars()
-            call.respond(
-                CarDatas(
-                    cars.map {
-                        toViewModel(it)
-                    }
+//             TODO: Abtract some of this code
+            try {
+                val db = Db()
+                val cars = db.getCars()
+                call.respond(
+                    CarDatas(
+                        cars.map {
+                            toViewModel(it)
+                        }
+                    )
                 )
-            )
+                call.respond(HttpStatusCode.OK)
+            }
+            catch (e: java.lang.Exception) {
+                println("Tomas e = ${e}")
+                call.respond(HttpStatusCode.NotFound)
+            }
         }
     }
 }
