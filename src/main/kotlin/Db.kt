@@ -1,4 +1,3 @@
-import com.google.cloud.storage.BucketInfo
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -14,15 +13,27 @@ import org.sqlite.SQLiteDataSource
 import java.io.File
 import java.sql.Connection
 import java.time.LocalDate
-import com.google.cloud.storage.StorageOptions
-
-
 
 fun createDbFile(): File {
     var file = File("foo.db")
     val created = file.createNewFile()
     println("created new db file = ${created}")
     return file
+}
+
+object DbSettings {
+    val db by lazy {
+        val user = "blocket"
+        val passwd = "Hej123456"
+        val databaseName = "blocket"
+        val instanceConnName = "nimble-sylph-251712:europe-west1:nimble-sylph-251712-1"
+        val connStr = "jdbc:mysql://google/$databaseName?cloudSqlInstance=$instanceConnName&socketFactory=com.google.cloud.sql.mysql.SocketFactory&useSSL=false&user=$user&password=$passwd"
+        Database.connect(connStr,
+            driver = "com.mysql.jdbc.Driver",
+            user = user,
+            password = passwd
+        )
+    }
 }
 
 // TODO: Should be an interface?

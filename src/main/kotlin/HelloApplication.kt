@@ -1,5 +1,4 @@
-import com.google.auth.Credentials
-import com.google.cloud.storage.BucketInfo
+import com.google.cloud.storage.StorageOptions
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -8,29 +7,26 @@ import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
 import io.ktor.gson.gson
+import io.ktor.html.respondHtml
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
 import io.ktor.response.respondFile
-import io.ktor.routing.routing
 import io.ktor.routing.get
-import org.jetbrains.exposed.sql.SortOrder
+import io.ktor.routing.routing
+import kotlinx.html.body
+import kotlinx.html.head
+import kotlinx.html.p
+import kotlinx.html.title
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.joda.time.DateTime
 import java.io.File
 import java.text.DateFormat
 import java.time.LocalDate
-import com.google.cloud.storage.Storage.BucketListOption
-import com.google.cloud.storage.StorageOptions
-import io.ktor.html.respondHtml
-import kotlinx.html.head
-import kotlinx.html.body
-import kotlinx.html.p
-import kotlinx.html.title
-import org.apache.http.client.methods.RequestBuilder.head
-import java.io.FileInputStream
-import com.google.auth.oauth2.GoogleCredentials
-
-
 
 data class Model(
     val name: String,
@@ -89,14 +85,13 @@ fun Application.main() {
                 val fetcher = DataFetcher()  // Static or
                 fetcher.fetch(skodaConfiguration2())
                 call.respond(HttpStatusCode.OK)
-            }
-            catch (e: Exception) {
+            } catch (e: Exception) {
                 call.respond(HttpStatusCode.NotFound)
             }
         }
 
         get("/json-data") {
-//             TODO: Abtract some of this code
+            //             TODO: Abtract some of this code
             try {
                 val db = Db()
                 val cars = db.getCars()
@@ -108,10 +103,69 @@ fun Application.main() {
                     )
                 )
                 call.respond(HttpStatusCode.OK)
-            }
-            catch (e: java.lang.Exception) {
+            } catch (e: java.lang.Exception) {
                 println("Tomas e = ${e}")
                 call.respond(HttpStatusCode.NotFound)
+            }
+        }
+
+        get("/cloudsql") {
+            //            val dummyThing = System.getProperty("cloudsql")
+            val dummyThing = "null"
+            val db = DbSettings.db
+            val apa = transaction {
+                SchemaUtils.create(Car)
+            }
+
+            val domainCar = DomainCar(
+                brand = "Skoda",
+                title = "Skoda Kodiaq",
+                fuel = "Diesel",
+                gearbox = "Automat",
+                milage = 1234,
+                price = 299000,
+                date_added = LocalDate.of(2019, 8, 1),
+                model_year = 2018,
+                url = "http://www.blocket.se/skoda"
+            )
+
+            transaction {
+                val existing = Car.select {
+                    Car.url eq domainCar.url
+                }.count() > 0
+
+                if (!existing) {
+                    Car.insert { car ->
+                        car[brand] = domainCar.brand
+                        car[title] = domainCar.title
+                        car[fuel] = domainCar.fuel
+                        car[gearbox] = domainCar.gearbox
+                        car[milage] = domainCar.milage
+                        car[price] = domainCar.price
+                        car[date_added] = DateTime.parse(domainCar.date_added.toString())
+                        car[model_year] = domainCar.model_year
+                        car[url] = domainCar.url
+                        car[emailed] = false
+                    }
+                }
+            }
+
+            val str = transaction {
+                Car.selectAll().map { row ->
+                    row.get(Car.title)
+                }
+            }
+
+            call.respondHtml {
+                head {
+                    title { +"Cloud SQL" }
+                }
+                body {
+                    p {
+                        //                        +dummyThing
+                        +str.joinToString()
+                    }
+                }
             }
         }
 
@@ -136,7 +190,7 @@ fun Application.main() {
 //                }
 //            }
 
-            val str = buckets.iterateAll().map {bucket ->
+            val str = buckets.iterateAll().map { bucket ->
                 bucket.name
             }
 
