@@ -183,26 +183,13 @@ fun Application.main() {
         }
 
         get("/list-buckets") {
-            val storage = StorageOptions.getDefaultInstance().getService()
-//            val storage = StorageOptions.
-//                newBuilder().
-//                setProjectId("nimble-sylph-251712").
-//                build().
-//                service
-//            val credentials = GoogleCredentials.fromStream(
-//                FileInputStream("/Users/tomasb/gcp-key/Blocket-85796bf414a3.json")
-//            )
-//                .createScoped(listOf("https://www.googleapis.com/auth/cloud-platform"))
-//            val storage = StorageOptions.newBuilder().setCredentials(credentials).build().service
+            val storage = StorageOptions.
+                newBuilder().
+                setProjectId("nimble-sylph-251712").
+                build().
+                service
 
             val buckets = storage.list()
-//            for (bucket in buckets.iterateAll()) {
-//                val blobs = bucket.list()
-//                for (blob in blobs.iterateAll()) {
-//                    // do something with the blob
-//                }
-//            }
-
             val str = buckets.iterateAll().map { bucket ->
                 bucket.name
             }
