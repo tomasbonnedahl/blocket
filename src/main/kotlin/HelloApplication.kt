@@ -1,4 +1,4 @@
-import com.google.appengine.api.datastore.KeyFactory
+import com.google.cloud.datastore.DatastoreOptions
 import com.google.cloud.storage.StorageOptions
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -27,11 +27,6 @@ import org.joda.time.DateTime
 import java.io.File
 import java.text.DateFormat
 import java.time.LocalDate
-import com.google.cloud.datastore.DatastoreOptions
-import com.google.cloud.datastore.Datastore
-import sun.security.rsa.RSAPrivateCrtKeyImpl.newKey
-
-
 
 data class Model(
     val name: String,
@@ -140,6 +135,7 @@ fun Application.main() {
                 }.count() > 0
 
                 if (!existing) {
+                    println("Adding, doesn't exist")
                     Car.insert { car ->
                         car[brand] = domainCar.brand
                         car[title] = domainCar.title
@@ -153,6 +149,9 @@ fun Application.main() {
                         car[emailed] = false
                     }
                 }
+                else {
+                    println("Not adding, already existing")
+                }
             }
 
             val str = transaction {
@@ -161,45 +160,12 @@ fun Application.main() {
                 }
             }
 
-//            val datastore = DatastoreServiceFactory.getDatastoreService()
-//            val datastore = DatastoreOptions.getDefaultInstance().service
-//            val asfas = DatastoreOptions.Builder().setProjectId("nimble-sylph-251712").build().service
-//            val taskKey = datastore.newKeyFactory().setKind("ENV_VAR").newKey("ENV_VARS")
-//            val entity = datastore.get(taskKey)
-//            val value = entity.getString("TEST_KEY")
-
-//            val datastore = DatastoreOptions.getDefaultInstance().service
-            val datastore = DatastoreOptions.
-                newBuilder().
-                setProjectId("nimble-sylph-251712").
-                build().service
-//            val key = KeyFactory.createKey("ENV_VAR", "ENV_VARS")
-//            val ds = DatastoreServiceFactory.getDatastoreService()
-//            val entity = ds.get(key)
-//            val value = entity.toString()
+            val datastore = DatastoreOptions.newBuilder().setProjectId("nimble-sylph-251712").build().service
             val taskKey = datastore.newKeyFactory().setKind("ENV_VAR").newKey("ENV_VARS")
             val entity = datastore.get(taskKey)
-            val value = entity.getString("TEST_KEY")
-
-//            val key = KeyFactory.createKey("ENV_VAR", "ENV_VARS")
-//            val q = Query("ENV_VAR").addSort(Entity.KEY_RESERVED_PROPERTY)
-//            val res = datastore.prepare(q).asList(FetchOptions.Builder.withDefaults())
-//            val vars = res.map {
-//                "${it.key} -> ${datastore.get(it.key)}"
-//            }
-//            val entity = datastore.get(key)
-//            val value = entity.getProperty("TEST_KEY").toString()
-
-//            val afs = GoogleCredentials.fromStream(FileInputStream("asf")) as Credential
-//            val PROJECT_ID = "nimble-sylph-251712"
-//            val options = DatastoreOptions.Builder().
-//                credential(afs).
-//                projectId(PROJECT_ID).
-//                build()
-//            val datastore = options. getService()
-//            val keyFactory = datastore.newKeyFactory().setKind(KIND)
-//            val key = keyFactory.newKey(keyName)
-//            val entity = datastore.get(key)
+            val values = listOf("TEST_KEY", "TEST_KEY2").map {
+                entity.getString(it)
+            }
 
             call.respondHtml {
                 head {
@@ -210,10 +176,7 @@ fun Application.main() {
                         +str.joinToString()
                     }
                     p {
-                        //                        +dummyThing
-//                        +str.joinToString()
-//                        +vars.joinToString()
-                        +value
+                        +values.joinToString()
                     }
                 }
             }
