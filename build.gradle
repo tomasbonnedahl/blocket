@@ -49,6 +49,7 @@ dependencies {
     compile 'com.google.appengine:appengine-api-1.0-sdk:+'
     compile 'com.google.cloud:google-cloud-storage:1.89.0'
     compile 'com.google.cloud.sql:mysql-socket-factory-connector-j-8:1.0.15'
+    compile 'com.google.cloud:google-cloud-datastore:1.91.0'
     providedCompile "com.google.appengine:appengine:$appengine_version"
 }
 
