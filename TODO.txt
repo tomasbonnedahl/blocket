@@ -1,3 +1,6 @@
+- Will kotlin "object" only instantiate one of the class but execute the
+    methods each time they are called? (For factory). Only want one db instance.
+    How to disconnect the db gracefully?
 - Fix X axis scale in graph (same distance for different lengths)
     Either by adjusting the bars (probably a setting in the graph lib), or
     Calculating a reasonable average based on lowest milage (zero?) and maximum milage

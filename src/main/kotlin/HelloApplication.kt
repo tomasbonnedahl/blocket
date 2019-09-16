@@ -58,8 +58,6 @@ data class CarDatas(
 fun Application.main() {
     org.apache.log4j.BasicConfigurator.configure()
 
-    // TODO: Instantiate factory here for db, reader, writer, etc.?
-
     // This adds Date and Server headers to each response, and allows custom additional headers
     install(DefaultHeaders)
     // This uses use the logger to log every call (request/response)
@@ -84,8 +82,20 @@ fun Application.main() {
         get("/fetch-new-data") {
             // TODO: Loop through the new data and see if any good cars (separate?)
             try {
-                val fetcher = DataFetcher()  // Static or
-                fetcher.fetch(skodaConfiguration2())
+                val fetchAndWrite = FetchAndWrite(
+                    DirtyFactory.newFetcher(),
+                    DirtyFactory.newWriter(),
+                    skodaConfiguration2()
+                )
+                fetchAndWrite.run()
+
+//                call.respondHtml {
+//                    body {
+//                        p {
+//                            +retVal.joinToString("<br>")
+//                        }
+//                    }
+//                }
                 call.respond(HttpStatusCode.OK)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.NotFound)
@@ -95,7 +105,7 @@ fun Application.main() {
         get("/json-data") {
             //             TODO: Abtract some of this code
             try {
-                val db = Db()
+                val db = DirtyFactory.newDb()
                 val cars = db.getCars()
                 call.respond(
                     CarDatas(
@@ -104,11 +114,16 @@ fun Application.main() {
                         }
                     )
                 )
-                call.respond(HttpStatusCode.OK)
+//                call.respond(HttpStatusCode.OK)
             } catch (e: java.lang.Exception) {
                 println("Tomas e = ${e}")
                 call.respond(HttpStatusCode.NotFound)
             }
+        }
+
+        get("/remove-all-entries") {
+            val db = DirtyFactory.newDb()
+            db.removeAll()
         }
 
         get("/cloudsql") {
