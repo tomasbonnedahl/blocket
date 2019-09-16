@@ -1,4 +1,3 @@
-- Why is new db file created every time we run appengineRun locally?
 - Fix X axis scale in graph (same distance for different lengths)
     Either by adjusting the bars (probably a setting in the graph lib), or
     Calculating a reasonable average based on lowest milage (zero?) and maximum milage
@@ -20,4 +19,6 @@
 - Use DAO (ORM)
     https://www.baeldung.com/kotlin-exposed-persistence
 - Add to Github?
+
+Next:
 - Netflix/Imdb

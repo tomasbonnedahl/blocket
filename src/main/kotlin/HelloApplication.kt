@@ -58,6 +58,8 @@ data class CarDatas(
 fun Application.main() {
     org.apache.log4j.BasicConfigurator.configure()
 
+    // TODO: Instantiate factory here for db, reader, writer, etc.?
+
     // This adds Date and Server headers to each response, and allows custom additional headers
     install(DefaultHeaders)
     // This uses use the logger to log every call (request/response)
@@ -125,8 +127,8 @@ fun Application.main() {
                 milage = 1234,
                 price = 299000,
                 date_added = LocalDate.of(2019, 8, 1),
-                model_year = 2018,
-                url = "http://www.blocket.se/skoda"
+                model_year = 2019,
+                url = "http://www.blocket.se/skoda2"
             )
 
             transaction {
@@ -156,7 +158,7 @@ fun Application.main() {
 
             val str = transaction {
                 Car.selectAll().map { row ->
-                    row.get(Car.title)
+                    row.get(Car.title) + ", " + row.get(Car.model_year)
                 }
             }
 
