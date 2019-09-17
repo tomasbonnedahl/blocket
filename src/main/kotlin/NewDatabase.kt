@@ -39,6 +39,10 @@ object NewDbSettings {
 }
 
 class NewDatabaseImpl : NewDatabase {
+    init {
+        org.apache.log4j.BasicConfigurator.configure()
+    }
+
     override fun write(domainCar: DomainCar) {
         // TODO: Add exclusion filter separate from this class
         if (domainCar.price < 100000) {
