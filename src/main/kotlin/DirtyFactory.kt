@@ -1,3 +1,5 @@
+import com.google.cloud.datastore.DatastoreOptions
+
 object DirtyFactory {
     fun newFetcher(): NewFetcher {
         return NewFetcherImpl()
@@ -8,12 +10,18 @@ object DirtyFactory {
     }
 
     fun newDb(): NewDatabase {
-        val databaseConfig = DatabaseConfig(
-            "blocket",
-            "Hej123456",
-            "blocket",
-            "nimble-sylph-251712:europe-west1:nimble-sylph-251712-1"
+        return NewDatabaseImpl(databaseConfig())
+    }
+
+    private fun databaseConfig(): DatabaseConfig {
+        val datastore = DatastoreOptions.newBuilder().setProjectId("nimble-sylph-251712").build().service
+        val taskKey = datastore.newKeyFactory().setKind("ENV_VAR").newKey("ENV_VARS")
+        val entity = datastore.get(taskKey)
+        return DatabaseConfig(
+            entity.getString("USER"),
+            entity.getString("PASSWD"),
+            entity.getString("DATABASE_NAME"),
+            entity.getString("INSTANCE_CONN_NAME")
         )
-        return NewDatabaseImpl(databaseConfig)
     }
 }
