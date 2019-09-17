@@ -41,8 +41,8 @@ fun main(args: Array<String>) {
     org.apache.log4j.BasicConfigurator.configure()
 
 //    val url = "https://www.blocket.se/stockholm/bilar?q=skoda+kodiaq&w=2&r=11&st=s&ca=11&is=1&l=0&md=th&cg=1020&st=s"
-    val runner2 = Runner2(skodaConfiguration())
-    runner2.run()
+//    val runner2 = Runner2(skodaConfiguration())
+//    runner2.run()
 
 //    val doc = Jsoup.connect(url).get()
 //    val mediaBody = doc.select("div.media-body")
