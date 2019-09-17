@@ -1,3 +1,4 @@
+import com.google.cloud.datastore.DatastoreOptions
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SortOrder
@@ -11,28 +12,32 @@ import org.joda.time.DateTime
 import java.time.LocalDate
 
 interface NewDatabase {
-    fun write(car: DomainCar)
+    fun write(domainCar: DomainCar)
     fun getCars(): List<DomainCar>
     fun removeAll()
 }
 
-class DatabaseConfig(
+data class DatabaseConfig(
     val user: String,
     val passwd: String,
     val databaseName: String,
     val instanceConnName: String) {
-    fun driver() = "com.mysql.jdbc.Driver"
-    fun connStr() = "jdbc:mysql://google/$databaseName?cloudSqlInstance=$instanceConnName&socketFactory=com.google.cloud.sql.mysql.SocketFactory&useSSL=false&user=$user&password=$passwd"
+    val driver
+        get() = "com.mysql.jdbc.Driver"
+    val connStr
+        get() = "jdbc:mysql://google/$databaseName?cloudSqlInstance=$instanceConnName&socketFactory=com.google.cloud.sql.mysql.SocketFactory&useSSL=false&user=$user&password=$passwd"
 }
 
-class NewDatabaseImpl(config: DatabaseConfig) : NewDatabase {
-    init {
-        Database.connect(config.connStr(),
-            driver = config.driver(),
+object NewDbSettings {
+    fun init(config: DatabaseConfig) {
+        Database.connect(config.connStr,
+            driver = config.driver,
             user = config.user,
             password = config.passwd)
     }
+}
 
+class NewDatabaseImpl : NewDatabase {
     override fun write(domainCar: DomainCar) {
         // TODO: Add exclusion filter separate from this class
         if (domainCar.price < 100000) {

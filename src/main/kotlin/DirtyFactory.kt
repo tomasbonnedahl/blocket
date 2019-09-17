@@ -1,6 +1,10 @@
 import com.google.cloud.datastore.DatastoreOptions
 
 object DirtyFactory {
+    init {
+        NewDbSettings.init(databaseConfig())
+    }
+
     fun newFetcher(): NewFetcher {
         return NewFetcherImpl()
     }
@@ -10,7 +14,7 @@ object DirtyFactory {
     }
 
     fun newDb(): NewDatabase {
-        return NewDatabaseImpl(databaseConfig())
+        return NewDatabaseImpl()
     }
 
     private fun databaseConfig(): DatabaseConfig {
