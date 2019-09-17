@@ -165,8 +165,7 @@ fun Application.main() {
                         car[url] = domainCar.url
                         car[emailed] = false
                     }
-                }
-                else {
+                } else {
                     println("Not adding, already existing")
                 }
             }
@@ -199,12 +198,16 @@ fun Application.main() {
             }
         }
 
+        get("/list-all-cars") {
+            val db = DirtyFactory.newDb()
+            val carsByDateAdded = db.getCars().groupBy { car ->
+                car.date_added
+            }.toSortedMap(reverseOrder())
+            call.respond(carsByDateAdded)
+        }
+
         get("/list-buckets") {
-            val storage = StorageOptions.
-                newBuilder().
-                setProjectId("nimble-sylph-251712").
-                build().
-                service
+            val storage = StorageOptions.newBuilder().setProjectId("nimble-sylph-251712").build().service
 
             val buckets = storage.list()
             val str = buckets.iterateAll().map { bucket ->
