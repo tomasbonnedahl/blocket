@@ -29,6 +29,7 @@ data class DatabaseConfig(
 }
 
 object NewDbSettings {
+    // TODO: lazy? Should/can we guarantee that we only connect once?
     fun init(config: DatabaseConfig) {
         Database.connect(config.connStr,
             driver = config.driver,
