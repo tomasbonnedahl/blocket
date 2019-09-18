@@ -13,7 +13,7 @@ object DirtyFactory {
         return NewWriterImpl(newDb())
     }
 
-    fun newDb(): NewDatabase {
+    fun newDb(): Repo {
         return NewDatabaseImpl()
     }
 

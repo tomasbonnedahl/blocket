@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Fetch API</title>
+    <title>Blocket</title>
 </head>
 <body>
     <canvas id="myChart"></canvas>
@@ -47,6 +47,13 @@
                           labels: {
                             fontColor: "#000080",
                           }
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                return data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].tooltip;
+                            }
+                        }
                     }
                 }
             });
@@ -58,7 +65,7 @@
             .then(function(data) {
                 let theData = data.data;
                 xyPoints = theData.map(function(elemm) {
-                    return {'x': elemm.milage, 'y': elemm.price};
+                    return {'x': elemm.milage, 'y': elemm.price, 'tooltip': elemm.tooltip};
                 });
                 plotIt(xyPoints);
             })

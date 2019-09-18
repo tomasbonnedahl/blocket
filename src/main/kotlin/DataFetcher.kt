@@ -1,5 +1,3 @@
-import org.jsoup.Jsoup
-
 fun commonFields2(): Map<String, Field> {
     return mapOf(
         "title" to TitleField(),

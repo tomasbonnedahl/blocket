@@ -1,3 +1,7 @@
+- Remove car with wrong milage
+    Output id in list-all-cars
+    Remove a single item by /remove/{id}?
+- Fix URL, post-fixed by something (4_87333801.htm?ca\u003d11\u0026w\u003d2)
 - Will kotlin "object" only instantiate one of the class but execute the
     methods each time they are called? (For factory). Only want one db instance.
     How to disconnect the db gracefully?

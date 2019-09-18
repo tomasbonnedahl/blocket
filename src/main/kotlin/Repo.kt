@@ -1,8 +1,6 @@
-import com.google.cloud.datastore.DatastoreOptions
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SortOrder
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
@@ -11,7 +9,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
 import java.time.LocalDate
 
-interface NewDatabase {
+interface Repo {
     fun write(domainCar: DomainCar)
     fun getCars(): List<DomainCar>
     fun removeAll()
@@ -38,7 +36,7 @@ object NewDbSettings {
     }
 }
 
-class NewDatabaseImpl : NewDatabase {
+class NewDatabaseImpl : Repo {
     init {
         org.apache.log4j.BasicConfigurator.configure()
     }

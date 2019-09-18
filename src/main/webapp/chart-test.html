@@ -17,13 +17,16 @@
             borderColor: 'rgb(255, 99, 132)',
             data: [{
                 x: 0,
-                y: 300
+                y: 300,
+                tooltip: 'hej'
             }, {
                 x: 10,
-                y: 289
+                y: 289,
+                tooltip: 'hej2'
             }, {
                 x: 100,
-                y: 200
+                y: 200,
+                tooltip: 'hej3'
             }]
         }]
     },
@@ -40,7 +43,14 @@
             labels: {
                 fontColor: "#000080",
             }
-        }
+        },
+        tooltips: {
+         callbacks: {
+            label: function(tooltipItem, data) {
+               return data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].tooltip;
+            }
+         }
+      }
 
     }
 });

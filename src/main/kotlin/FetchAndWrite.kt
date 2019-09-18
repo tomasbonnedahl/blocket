@@ -5,7 +5,6 @@ class FetchAndWrite(
 ) {
     fun run() {
         fetcher.fetch(fetchConfig).forEach { car ->
-            println("Writing car.title = ${car.title}")
             writer.write(car)
         }
     }
