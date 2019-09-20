@@ -10,6 +10,10 @@
     <canvas id="myChart"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script>
+        function randomInteger(min, max) {
+            return Math.floor(Math.random() * (max - min) ) + min;
+        }
+
         function plotIt(theXYPoints) {
             var ctx = document.getElementById('myChart').getContext('2d');
             var chart = new Chart(ctx, {
@@ -97,7 +101,8 @@
                         }
                     });
 
-                    let aNewDict = {"label": key, "data": newValz, "backgroundColor": 'rgb(23, 23, 132)'};
+                    let color = 'rgb(' + randomInteger(0, 255) + ',' + randomInteger(0, 255) + ',' + randomInteger(0, 255) + ')';
+                    let aNewDict = {"label": key, "data": newValz, "backgroundColor": color};
                     listOfDatasets.push(aNewDict);
                 }
 
