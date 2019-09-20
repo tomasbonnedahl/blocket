@@ -1,6 +1,10 @@
-- Remove car with wrong milage
-    Output id in list-all-cars
-    Remove a single item by /remove/{id}?
+Make it work:
+- Separate datasets per month added
+- Fix Opel
+- Move DB init to a separate class outside of DirtyFactory
+
+Make it good:
+Make it fast:
 - Fix URL, post-fixed by something (4_87333801.htm?ca\u003d11\u0026w\u003d2)
 - Will kotlin "object" only instantiate one of the class but execute the
     methods each time they are called? (For factory). Only want one db instance.

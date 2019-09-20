@@ -2,6 +2,7 @@ import com.google.cloud.datastore.DatastoreOptions
 
 object DirtyFactory {
     init {
+        // TODO: Move to a separate class
         NewDbSettings.init(databaseConfig())
     }
 
