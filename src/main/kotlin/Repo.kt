@@ -76,16 +76,12 @@ class NewDatabaseImpl : Repo {
     }
 
     override fun getCars(): List<DomainCar> {
-        var cars = emptyList<DomainCar>()
-        transaction {
-            println("Car.selectAll().count() = ${Car.selectAll().count()}")
+        return transaction {
             // TODO: Sort order outside this method
-            cars = Car.selectAll().orderBy(Car.milage to SortOrder.ASC).map {
+            Car.selectAll().orderBy(Car.milage to SortOrder.ASC).map {
                 toDomainCar(it)
             }
         }
-        println("cars.size = ${cars.size}")
-        return cars // TODO: Check how to do return in transaction {}
     }
 
     override fun removeAll() {
