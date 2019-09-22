@@ -1,11 +1,12 @@
 Make it work:
-- Separate datasets per month added
 - Fix Opel
 - Move DB init to a separate class outside of DirtyFactory
 
 Make it good:
+- Proper exclude classes instead of if:ing
+
 Make it fast:
-- Fix URL, post-fixed by something (4_87333801.htm?ca\u003d11\u0026w\u003d2)
+- Fix URL stored in db(?) and in tooltip, post-fixed by something (4_87333801.htm?ca\u003d11\u0026w\u003d2)
 - Will kotlin "object" only instantiate one of the class but execute the
     methods each time they are called? (For factory). Only want one db instance.
     How to disconnect the db gracefully?
