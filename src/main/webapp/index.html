@@ -76,7 +76,17 @@
             });
         }
 
-        const url = window.location.origin + '/json-data'
+
+        // const urlParams = new URLSearchParams(window.location.search);
+        // const brand = urlParams.get('brand');
+
+        console.log("window.location.pathname: " + window.location.pathname);
+        console.log("window.location.href: " + window.location.href);
+
+        brand = window.location.pathname.substring(1);
+        console.log("brand: " + brand);
+
+        const url = window.location.origin + '/json-data/' + brand
         fetch(url)
             .then((resp) => resp.json())
             .then(function(data) {

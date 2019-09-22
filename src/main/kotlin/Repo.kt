@@ -12,6 +12,7 @@ import java.time.LocalDate
 interface Repo {
     fun write(domainCar: DomainCar)
     fun getCars(): List<DomainCar>
+    fun getCars(brand: String): List<DomainCar>  // TODO: Enum instead of string?
     fun removeAll()
 }
 
@@ -79,6 +80,18 @@ class NewDatabaseImpl : Repo {
         return transaction {
             // TODO: Sort order outside this method
             Car.selectAll().orderBy(Car.milage to SortOrder.ASC).map {
+                toDomainCar(it)
+            }
+        }
+    }
+
+    override fun getCars(brand: String): List<DomainCar> {
+        return transaction {
+            // TODO: Sort order outside this method
+            println("Got brand = ${brand}")
+            Car.select {
+                Car.brand eq brand
+            }.orderBy(Car.milage to SortOrder.ASC).map {
                 toDomainCar(it)
             }
         }
