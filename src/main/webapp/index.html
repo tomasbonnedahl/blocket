@@ -14,49 +14,12 @@
             return Math.floor(Math.random() * (max - min) ) + min;
         }
 
-        function plotIt(theXYPoints) {
+        function plotIt(datasets) {
             var ctx = document.getElementById('myChart').getContext('2d');
             var chart = new Chart(ctx, {
                 type: 'scatter',
+                data: datasets,
 
-<!--                data: {-->
-<!--                    datasets: [{-->
-<!--                        label: 'Aug 2019',-->
-<!--                        borderColor: 'rgb(255, 99, 132)',-->
-<!--                        data: points-->
-<!--                    },{-->
-<!--                        label: 'Sep 2019',-->
-<!--                        borderColor: 'rgb(255, 99, 132)',-->
-<!--                        data: points-->
-<!--                    },-->
-
-                data: theXYPoints,
-<!--                data: {-->
-<!--                    datasets: [{-->
-<!--                        label: 'Actual data',-->
-<!--                        &lt;!&ndash;backgroundColor: 'rgb(255, 99, 132)',&ndash;&gt;-->
-<!--                        borderColor: 'rgb(255, 99, 132)',-->
-<!--                        &lt;!&ndash;data: [0, 10, 5]&ndash;&gt;-->
-<!--                        data: theXYPoints-->
-<!--                    }, {-->
-<!--                        label: '2017 August',-->
-<!--                        &lt;!&ndash;backgroundColor: 'rgb(23, 23, 132)',&ndash;&gt;-->
-<!--                        borderColor: 'rgb(23, 23, 132)',-->
-<!--                        &lt;!&ndash;data: [0, 10, 5]&ndash;&gt;-->
-<!--                        data: [-->
-<!--                        { x: 1783, y: 329900 },-->
-<!--                        { x: 2200, y: 329900 },-->
-<!--                        { x: 2815, y: 329900 },-->
-<!--                        { x: 3298, y: 329900 },-->
-<!--                        { x: 4374, y: 324900 },-->
-<!--                        { x: 4438, y: 319900 },-->
-<!--                        { x: 4752, y: 314900 },-->
-<!--                        { x: 4995, y: 324900 },-->
-<!--                        ]-->
-<!--                    }]-->
-<!--                },-->
-
-                // Configuration options go here
                 options: {
                     legend: {
                           display: true,
@@ -76,115 +39,40 @@
             });
         }
 
-
-        // const urlParams = new URLSearchParams(window.location.search);
-        // const brand = urlParams.get('brand');
-
-        console.log("window.location.pathname: " + window.location.pathname);
-        console.log("window.location.href: " + window.location.href);
+        var stack = [];
+        stack.push({'r': 255, 'g': 99, 'b': 132});
+        stack.push({'r': 209, 'g': 100, 'b': 255});
+        stack.push({'r': 100, 'g': 214, 'b': 255});
+        stack.push({'r': 255, 'g': 100, 'b': 225});
+        stack.push({'r': 246, 'g': 255, 'b': 100});
+        stack.push({'r': 255, 'g': 183, 'b': 100});
+        stack.push({'r': 100, 'g': 162, 'b': 255});
+        stack.push({'r': 100, 'g': 255, 'b': 200});
 
         brand = window.location.pathname.substring(1);
-        console.log("brand: " + brand);
-
         const url = window.location.origin + '/json-data/' + brand
         fetch(url)
             .then((resp) => resp.json())
             .then(function(data) {
                 let carsByMonth = data.dataByMonth;
 
-                var stack = [];
-                stack.push({'r': 255, 'g': 99, 'b': 132});
-                stack.push({'r': 209, 'g': 100, 'b': 255});
-                stack.push({'r': 100, 'g': 214, 'b': 255});
-                stack.push({'r': 255, 'g': 100, 'b': 225});
-                stack.push({'r': 246, 'g': 255, 'b': 100});
-                stack.push({'r': 255, 'g': 183, 'b': 100});
-                stack.push({'r': 100, 'g': 162, 'b': 255});
-                stack.push({'r': 100, 'g': 255, 'b': 200});
-
                 var listOfDatasets = []
 
-                console.log("data: " + data);
-                console.log("carsByMonth: " + carsByMonth);
-                for (const [key, value] of Object.entries(carsByMonth)) {
-                    console.log("obj entry: " + key + ": " + value);
-
-                    newValz = value.map(function(each) {
+                for (const [month, cars] of Object.entries(carsByMonth)) {
+                    xyPoints = cars.map(function(each) {
                         return {'x': each.milage, 'y': each.price, 'tooltip': each.tooltip};
                     });
 
-                    carsByMonth[key] = newValz;
+                    carsByMonth[month] = xyPoints;
 
-                    newValz.forEach(function(e) {
-                        for (const [k2, v2] of Object.entries(e)) {
-                            console.log("k2/v2: " + k2 + ": " + v2);
-                        }
-                    });
-
-                    let i = stack.pop();
-                    let color = 'rgb(' + i['r'] + ',' + i['g'] + ',' + i['b'] + ')';
-                    let aNewDict = {"label": key, "data": newValz, "backgroundColor": color};
-                    listOfDatasets.push(aNewDict);
+                    let colorCode = stack.pop();
+                    let color = 'rgb(' + colorCode['r'] + ',' + colorCode['g'] + ',' + colorCode['b'] + ')';
+                    let dataset = {"label": month, "data": xyPoints, "backgroundColor": color};
+                    listOfDatasets.push(dataset);
                 }
 
-                // Validate
-                console.log("Validation");
-                for (const [key, value] of Object.entries(carsByMonth)) {
-                    console.log("entry: " + key + ": " + value);
-                    value.forEach(function(e) {
-                        for (const [k3, v3] of Object.entries(e)) {
-                            console.log("validate key/validate value: " + k3 + ": " + v3);
-                        }
-                    });
-                }
-
-                console.log("Validation 2");
-                listOfDatasets.forEach(function(e) {
-                    for (const [key, value] of Object.entries(e)) {
-                        console.log("key/value: " + key + ": " + value);
-                    }
-                    e["data"].forEach(function(e2) {
-                        for (const[k3, v3] of Object.entries(e2)) {
-                            console.log("k3/v3: " + k3 + ": " + v3);
-                        }
-                    });
-                });
-
-<!--                var oneDataset = {"label": "Aug 2019", "data": xyPoints}-->
-<!--                var anotherDataset = {"label": "Aug 2019", "data": xyPoints}-->
-<!--                var datasetList = [oneDataset, anotherDataset];-->
                 var datasets = {"datasets": listOfDatasets};
-                var d = {"data": datasets};
                 plotIt(datasets);
-                let tempData = [{'x': 4000, 'y': 350000, 'tooltip': "tooltip"}];
-                let tempDS = [{"label": "the label", "data": tempData, "backgroundColor": 'rgb(23, 23, 132)'}];
-                let tempOverall = {"datasets": tempDS};
-
-                console.log("Validation 3 - real");
-                d["data"]["datasets"].forEach(function(e) {
-                    for (const [key, value] of Object.entries(e)) {
-                        console.log("key/value: " + key + ": " + value);
-                    }
-                    e["data"].forEach(function(e2) {
-                        for (const[k3, v3] of Object.entries(e2)) {
-                            console.log("k3/v3: " + k3 + ": " + v3);
-                        }
-                    });
-                });
-
-                console.log("Validation 4 - temp");
-                listOfDatasets.forEach(function(e) {
-                    for (const [key, value] of Object.entries(e)) {
-                        console.log("key/value: " + key + ": " + value);
-                    }
-                    e["data"].forEach(function(e2) {
-                        for (const[k3, v3] of Object.entries(e2)) {
-                            console.log("k3/v3: " + k3 + ": " + v3);
-                        }
-                    });
-                });
-
-<!--                plotIt(tempOverall);-->
             })
             .catch(function(error) {
             console.log(JSON.stringify(error));
