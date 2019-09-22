@@ -9,8 +9,11 @@ data class CarDatas(
 )
 
 class JsonGetter(val db: Repo) {
-    fun carDatas(brand: String): CarDatas {
-        val cars = db.getCars(brand)
+    fun carDatas(brand: String?): CarDatas {
+        val cars = when (brand) {
+            null -> db.getCars()
+            else -> db.getCars(brand)
+        }
         val apa = cars.groupBy { car ->
             car.date_added.month.toString() + " " + car.date_added.year.toString()
         }

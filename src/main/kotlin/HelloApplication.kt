@@ -1,5 +1,4 @@
 import io.ktor.application.Application
-import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.CORS
@@ -7,23 +6,12 @@ import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
 import io.ktor.gson.gson
-import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.Parameters
-import io.ktor.http.URLBuilder
-import io.ktor.http.content.OutgoingContent
-import io.ktor.http.formUrlEncode
-import io.ktor.http.formUrlEncodeTo
-import io.ktor.http.parametersOf
 import io.ktor.response.respond
 import io.ktor.response.respondFile
 import io.ktor.response.respondRedirect
-import io.ktor.response.respondTextWriter
 import io.ktor.routing.get
 import io.ktor.routing.routing
-import io.ktor.sessions.sessions
-import io.ktor.util.AttributeKey
-import io.ktor.util.url
 import java.io.File
 import java.text.DateFormat
 
@@ -54,12 +42,22 @@ fun Application.main() {
 //            call.respondFile(File("./index.html"))
         }
 
+        get("/json-data/{brand?}") {
+            val brand = call.parameters["brand"]
+            try {
+                val cars = JsonGetter(DirtyFactory.newDb()).carDatas(brand)
+                println("cars = ${cars}")
+                call.respond(cars)
+            } catch (e: java.lang.Exception) {
+                println("Error in /json-data: ${e}")
+                call.respond(HttpStatusCode.NotFound)
+            }
+        }
+
         get("/{brand}") {
-//            call.respondFile(File("./index.html?brand=$brand"))
-//            val apa = parametersOf("brand", brand).formUrlEncode()
-//            val apa2 = parametersOf("brand", brand)
+            val brand = call.parameters["brand"]!!
+            println("Got to /brand: {$brand}")
             call.respondFile(File("./index.html"))
-//            call.respondUrlEncoded(apa2)
         }
 
         get("/fetch-new-data") {
@@ -77,18 +75,6 @@ fun Application.main() {
             }
         }
 
-        get("/json-data/{brand}") {
-            val brand = call.parameters["brand"]!!
-            try {
-                val cars = JsonGetter(DirtyFactory.newDb()).carDatas(brand)
-                println("cars = ${cars}")
-                call.respond(cars)
-            } catch (e: java.lang.Exception) {
-                println("Error in /json-data: ${e}")
-                call.respond(HttpStatusCode.NotFound)
-            }
-        }
-
         get("/remove-all-entries") {
             DirtyFactory.newDb().removeAll()
         }
@@ -102,11 +88,3 @@ fun Application.main() {
         }
     }
 }
-
-suspend fun ApplicationCall.respondUrlEncoded(vararg keys: Pair<String, List<String>>) =
-    respondUrlEncoded(parametersOf(*keys))
-
-suspend fun ApplicationCall.respondUrlEncoded(parameters: Parameters) =
-    respondTextWriter(ContentType.Application.FormUrlEncoded) {
-        parameters.formUrlEncodeTo(this)
-    }
