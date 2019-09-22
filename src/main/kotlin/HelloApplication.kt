@@ -63,12 +63,8 @@ fun Application.main() {
         get("/fetch-new-data") {
             // TODO: Loop through the new data and see if any good cars (separate/pub-sub?)
             try {
-                val fetchAndWrite = FetchAndWrite(
-                    DirtyFactory.newFetcher(),
-                    DirtyFactory.newWriter(),
-                    skodaConfiguration2()
-                )
-                fetchAndWrite.run()
+                FetchNewData.run(skodaConfiguration2())
+                FetchNewData.run(opelConfiguration())
                 call.respond(HttpStatusCode.OK)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.NotFound)
