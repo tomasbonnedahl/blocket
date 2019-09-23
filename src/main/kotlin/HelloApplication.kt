@@ -54,14 +54,13 @@ fun Application.main() {
         }
 
         get("/{brand}") {
-            val brand = call.parameters["brand"]!!
             call.respondFile(File("./index.html"))
         }
 
         get("/fetch-new-data") {
             // TODO: Loop through the new data and see if any good cars (separate/pub-sub?)
             try {
-                FetchNewData.run(skodaConfiguration2())
+                FetchNewData.run(skodaConfiguration())
                 FetchNewData.run(opelConfiguration())
                 call.respond(HttpStatusCode.OK)
             } catch (e: Exception) {

@@ -1,11 +1,11 @@
 import org.jsoup.Jsoup
 
 interface NewFetcher {
-    fun fetch(config: Configuration): List<DomainCar>
+    fun fetch(): List<DomainCar>
 }
 
-class NewFetcherImpl : NewFetcher {
-    override fun fetch(config: Configuration): List<DomainCar> {
+class NewFetcherImpl(val config: FetchConfiguration) : NewFetcher {
+    override fun fetch(): List<DomainCar> {
         return config.years().flatMap { year ->
             val doc = Jsoup.connect(config.urlForYear(year)).get()
             val carListing = doc.select(config.section)

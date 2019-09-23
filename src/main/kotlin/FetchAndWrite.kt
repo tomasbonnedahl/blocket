@@ -1,10 +1,9 @@
 class FetchAndWrite(
     val fetcher: NewFetcher,
-    val writer: NewWriter,
-    val fetchConfig: Configuration
+    val writer: NewWriter
 ) {
     fun run() {
-        fetcher.fetch(fetchConfig).forEach { car ->
+        fetcher.fetch().forEach { car ->
             writer.write(car)
         }
     }

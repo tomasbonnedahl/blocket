@@ -1,6 +1,3 @@
-import org.jsoup.Jsoup
-import java.time.LocalDate
-
 // https://www.blocket.se/stockholm?q=skoda+kodiaq&cg=0&w=2&r=11&st=s&ca=11&is=1&l=0&md=th
 // https://www.blocket.se/stockholm/bilar?q=skoda+kodiaq&w=2&r=11&st=s&ca=11&is=1&l=0&md=th&cg=1020&st=s
 
@@ -20,21 +17,6 @@ fun commonFields(): Map<String, Field> {
         "date_added" to DateAddedField(),
         "url" to UrlField()
     )
-}
-
-fun skodaConfiguration(): Configuration {
-    val years = listOf(
-        2017,
-        2018,
-        2019
-    )
-//    val url = "https://www.blocket.se/stockholm/bilar?cg=1020&w=1&st=s&ca=11&is=1&l=0&md=th&cb=34"
-    val url = "https://www.blocket.se/stockholm/bilar?q=skoda+kodiaq&w=2&r=11&st=s&ca=11&is=1&l=0&md=th&cg=1020&st=s&cb=34"
-    val config = Configuration(url, "div.media-body", years)
-    config.addFields(commonFields())
-    config.addField("brand", BrandField("Skoda"))
-//    config.addField("model_year", ModelYearField(2018))
-    return config
 }
 
 fun main(args: Array<String>) {

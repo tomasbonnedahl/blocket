@@ -43,16 +43,6 @@ class NewDatabaseImpl : Repo {
     }
 
     override fun write(domainCar: DomainCar) {
-        // TODO: Add exclusion filter separate from this class, should be based on configuration(?)
-        if (domainCar.price < 100000 && domainCar.brand == "Skoda") {
-            // No price or monthly leasing
-            return
-        }
-
-        if (domainCar.title.contains("RS")) {
-            return
-        }
-
         transaction {
             val existing = Car.select {
                 Car.url eq domainCar.url

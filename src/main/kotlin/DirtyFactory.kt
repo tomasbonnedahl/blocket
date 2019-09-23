@@ -7,12 +7,12 @@ object DirtyFactory {
         NewDbSettings.init(databaseConfig())
     }
 
-    fun newFetcher(): NewFetcher {
-        return NewFetcherImpl()
+    fun newFetcher(fetchConfiguration: FetchConfiguration): NewFetcher {
+        return NewFetcherImpl(fetchConfiguration)
     }
 
-    fun newWriter(): NewWriter {
-        return NewWriterImpl(newDb())
+    fun newWriter(writeConfiguration: WriteConfiguration): NewWriter {
+        return NewWriterImpl(writeConfiguration, newDb())
     }
 
     fun newDb(): Repo {

@@ -10,7 +10,7 @@ fun commonFields2(): Map<String, Field> {
     )
 }
 
-fun skodaConfiguration2(): Configuration {
+fun skodaFetchConfiguration(): FetchConfiguration {
     val years = listOf(
         2017,
         2018,
@@ -20,24 +20,53 @@ fun skodaConfiguration2(): Configuration {
     )
 //    val url = "https://www.blocket.se/stockholm/bilar?cg=1020&w=1&st=s&ca=11&is=1&l=0&md=th&cb=34"
     val url = "https://www.blocket.se/stockholm/bilar?q=skoda+kodiaq&w=2&r=11&st=s&ca=11&is=1&l=0&md=th&cg=1020&st=s&cb=34"
-    val config = Configuration(url, "div.media-body", years)
+    val config = FetchConfiguration(url, "div.media-body", years)
     config.addFields(commonFields2())
     config.addField("brand", BrandField("Skoda"))
-//    config.addField("model_year", ModelYearField(2018))
     return config
 }
 
-
-fun opelConfiguration(): Configuration {
+fun opelFetchConfiguration(): FetchConfiguration {
     val years = listOf(
         2006,
         2007,
         2008
     )
     val url = "https://www.blocket.se/stockholm/bilar?q=opel+astra&w=2&r=11&st=s&ca=11&is=1&l=0&md=th&cg=1020&cb=26"
-    val config = Configuration(url, "div.media-body", years)
+    val config = FetchConfiguration(url, "div.media-body", years)
     config.addFields(commonFields2())
     config.addField("brand", BrandField("Opel"))
     return config
 }
 
+fun skodaWriteConfiguration(): WriteConfiguration {
+    return WriteConfiguration(
+        listOf(
+            PriceExists(),
+            Above100kPrice(),
+            NoRsModel()
+        )
+    )
+}
+
+fun opelWriteConfiguration(): WriteConfiguration {
+    return WriteConfiguration(
+        listOf(
+            PriceExists()
+        )
+    )
+}
+
+fun skodaConfiguration(): Configuration {
+    return Configuration(
+        skodaFetchConfiguration(),
+        skodaWriteConfiguration()
+    )
+}
+
+fun opelConfiguration(): Configuration {
+    return Configuration(
+        opelFetchConfiguration(),
+        opelWriteConfiguration()
+    )
+}
