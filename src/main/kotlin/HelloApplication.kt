@@ -46,7 +46,6 @@ fun Application.main() {
             val brand = call.parameters["brand"]
             try {
                 val cars = JsonGetter(DirtyFactory.newDb()).carDatas(brand)
-                println("cars = ${cars}")
                 call.respond(cars)
             } catch (e: java.lang.Exception) {
                 println("Error in /json-data: ${e}")
