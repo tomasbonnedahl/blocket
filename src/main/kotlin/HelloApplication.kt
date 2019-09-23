@@ -56,7 +56,6 @@ fun Application.main() {
 
         get("/{brand}") {
             val brand = call.parameters["brand"]!!
-            println("Got to /brand: {$brand}")
             call.respondFile(File("./index.html"))
         }
 
