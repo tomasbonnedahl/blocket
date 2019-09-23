@@ -34,8 +34,7 @@ fun opelConfiguration(): Configuration {
         2007,
         2008
     )
-//    val url = "https://www.blocket.se/stockholm/bilar?cg=1020&w=1&st=s&ca=11&is=1&l=0&md=th&cb=34"
-    val url = "https://www.blocket.se/stockholm?q=opel+astra&cg=1020&w=2&r=11&st=s&ps=&pe=&mys=&mye=&ms=&me=&cxpf=&cxpt=&fu=&pl=&gb=&ca=11&is=1&l=0&md=th&cp="
+    val url = "https://www.blocket.se/stockholm/bilar?q=opel+astra&w=2&r=11&st=s&ca=11&is=1&l=0&md=th&cg=1020&cb=26"
     val config = Configuration(url, "div.media-body", years)
     config.addFields(commonFields2())
     config.addField("brand", BrandField("Opel"))
