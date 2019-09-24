@@ -1,11 +1,11 @@
-data class CarData(
+data class CarViewModel(
     val milage: Int,
     val price: Int,
     val tooltip: String
 )
 
 data class CarDatas(
-    val dataByMonth: Map<String, List<CarData>>
+    val dataByMonth: Map<String, List<CarViewModel>>
 )
 
 class JsonGetter(val db: Repo) {
@@ -32,11 +32,11 @@ class JsonGetter(val db: Repo) {
 //        )
     }
 
-    private fun toViewModel(car: DomainCar): CarData {
-        return CarData(
+    private fun toViewModel(car: DomainCar): CarViewModel {
+        return CarViewModel(
             car.milage,
             car.price,
-            car.title + " (" + car.milage + "/" + car.price + ")"
+            car.title + " " + car.model_year + " (" + car.milage + "/" + car.price + ")"
         )
     }
 }
