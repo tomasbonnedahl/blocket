@@ -1,6 +1,7 @@
 Make it work:
 - Fix Opel
 - Move DB init to a separate class outside of DirtyFactory
+- Add to Github
 
 Make it good:
 - Proper exclude classes instead of if:ing
