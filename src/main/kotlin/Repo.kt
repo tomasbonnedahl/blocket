@@ -1,6 +1,7 @@
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
@@ -12,7 +13,7 @@ import java.time.LocalDate
 interface Repo {
     fun write(domainCar: DomainCar)
     fun getCars(): List<DomainCar>
-    fun getCars(brand: String): List<DomainCar>  // TODO: Enum instead of string?
+    fun getCars(brand: String, filterClass: FilterFactory2): List<DomainCar>  // TODO: Enum instead of string?
     fun removeAll()
 }
 
@@ -74,13 +75,45 @@ class NewDatabaseImpl : Repo {
         }
     }
 
-    override fun getCars(brand: String): List<DomainCar> {
+    override fun getCars(
+        brand: String,
+        filterClass: FilterFactory2
+    ): List<DomainCar> {
+//        val apa = transaction {
+//             TODO: Sort order outside this method
+//            Car.select {
+//                Car.brand eq brand
+//            }.orderBy(Car.milage to SortOrder.ASC).map {
+//                toDomainCar(it)
+//            }
+//        }
+
+        /*
+        val attr = Car.gearbox
+        val value = "asf"
+        val mappen = mapOf(
+            attr to value
+        )
+        val listan = listOf(mappen)
+        */
+        // New
+
         return transaction {
-            // TODO: Sort order outside this method
-            println("Got brand = ${brand}")
-            Car.select {
+            val query = Car.select {
                 Car.brand eq brand
-            }.orderBy(Car.milage to SortOrder.ASC).map {
+            }
+            filterClass.stringFilters.forEach { filter ->
+                query.andWhere {
+                    filter.attr eq filter.value
+                }
+            }
+            filterClass.intFilters.forEach { filter ->
+                query.andWhere {
+                    filter.attr eq filter.value
+                }
+            }
+
+            query.orderBy(Car.milage to SortOrder.ASC).map {
                 toDomainCar(it)
             }
         }

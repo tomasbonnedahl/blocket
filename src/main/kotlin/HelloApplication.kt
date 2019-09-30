@@ -10,6 +10,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
 import io.ktor.response.respondFile
 import io.ktor.response.respondRedirect
+import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import java.io.File
@@ -42,10 +43,24 @@ fun Application.main() {
 //            call.respondFile(File("./index.html"))
         }
 
-        get("/json-data/{brand?}") {
+        // TODO: Varargs? Check documentation
+        get("/json-data/{brand?}/{filter1?}/{filter2?}/{filter3?}") {
             val brand = call.parameters["brand"]
+            println("brand = ${brand}")
+            val filter1 = call.parameters["filter1"]
+            val filter2 = call.parameters["filter2"]
+            println("/json-data/, filter1 = ${filter1}")
+            println("/json-data/, filter2 = ${filter2}")
+
+            val filterParams = listOf(
+                call.parameters["filter1"],
+                call.parameters["filter2"],
+                call.parameters["filter3"]
+            )
+
+            val filterClass = FilterFactory2.of(filterParams)
             try {
-                val cars = JsonGetter(DirtyFactory.newDb()).carDatas(brand)
+                val cars = JsonGetter(DirtyFactory.newDb()).carDatas(brand, filterClass)
                 call.respond(cars)
             } catch (e: java.lang.Exception) {
                 println("Error in /json-data: ${e}")
@@ -53,13 +68,14 @@ fun Application.main() {
             }
         }
 
-        get("/{brand}") {
+        get("/{brand}/{filter1?}/{filter2?}/{filter3?}") {
             call.respondFile(File("./index.html"))
         }
 
         get("/fetch-new-data") {
             // TODO: Loop through the new data and see if any good cars (separate/pub-sub?)
             try {
+                // TODO: Get a list of "configurations" from somewhere
                 FetchNewData.run(skodaConfiguration())
                 FetchNewData.run(opelConfiguration())
                 call.respond(HttpStatusCode.OK)

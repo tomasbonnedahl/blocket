@@ -33,8 +33,8 @@ stack.push({'r': 255, 'g': 183, 'b': 100});
 stack.push({'r': 100, 'g': 162, 'b': 255});
 stack.push({'r': 100, 'g': 255, 'b': 200});
 
-brand = window.location.pathname.substring(1);
-const url = window.location.origin + '/json-data/' + brand
+brandAndFilters = window.location.pathname.substring(1);
+const url = window.location.origin + '/json-data/' + brandAndFilters;
 fetch(url)
     .then((resp) => resp.json())
     .then(function(data) {
