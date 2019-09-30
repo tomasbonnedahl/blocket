@@ -79,25 +79,6 @@ class NewDatabaseImpl : Repo {
         brand: String,
         filterClass: FilterFactory2
     ): List<DomainCar> {
-//        val apa = transaction {
-//             TODO: Sort order outside this method
-//            Car.select {
-//                Car.brand eq brand
-//            }.orderBy(Car.milage to SortOrder.ASC).map {
-//                toDomainCar(it)
-//            }
-//        }
-
-        /*
-        val attr = Car.gearbox
-        val value = "asf"
-        val mappen = mapOf(
-            attr to value
-        )
-        val listan = listOf(mappen)
-        */
-        // New
-
         return transaction {
             val query = Car.select {
                 Car.brand eq brand
@@ -112,10 +93,7 @@ class NewDatabaseImpl : Repo {
                     filter.attr eq filter.value
                 }
             }
-
-            query.orderBy(Car.milage to SortOrder.ASC).map {
-                toDomainCar(it)
-            }
+            query.map { toDomainCar(it) }
         }
     }
 

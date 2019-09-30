@@ -13,23 +13,17 @@ class JsonGetter(val db: Repo) {
         val cars = when (brand) {
             null -> db.getCars()
             else -> db.getCars(brand, filterClass)
-        }
-        val apa = cars.groupBy { car ->
+        }.sortedBy { car ->
+            car.milage
+        }.groupBy { car ->
             car.date_added.month.toString() + " " + car.date_added.year.toString()
-        }
-
-        val apa2 = apa.map { entry ->
+        }.map { entry ->
             entry.key to entry.value.map { car ->
                 toViewModel(car)
             }
         }.toMap()
 
-        return CarDatas(apa2)
-//        return CarDatas(
-//            cars.map {car ->
-//                car.date_added to toViewModel(car)
-//            }
-//        )
+        return CarDatas(cars)
     }
 
     private fun toViewModel(car: DomainCar): CarViewModel {
