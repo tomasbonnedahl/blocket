@@ -9,7 +9,7 @@ data class CarDatas(
 )
 
 class JsonGetter(val db: Repo) {
-    fun carDatas(brand: String?, filterClass: FilterFactory2): CarDatas {
+    fun carDatas(brand: String?, filterClass: FilterWrapper): CarDatas {
         val cars = when (brand) {
             null -> db.getCars()
             else -> db.getCars(brand, filterClass)

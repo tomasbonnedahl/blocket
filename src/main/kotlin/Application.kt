@@ -39,13 +39,12 @@ fun Application.main() {
         // @see https://github.com/Kotlin/kotlinx.html
         get("/") {
             call.respondRedirect("/Skoda")
-//            call.respondFile(File("./index.html"))
         }
 
         get("/json-data/{brand?}/{param...}") {
             val brand = call.parameters["brand"]
             val filterParams = call.parameters.getAll("param") ?: emptyList<String?>()
-            val filterClass = FilterFactory2.of(filterParams)
+            val filterClass = FilterWrapper.of(filterParams)
             try {
                 val cars = JsonGetter(
                     DirtyFactory.newDb()
@@ -64,9 +63,9 @@ fun Application.main() {
         get("/fetch-new-data") {
             // TODO: Loop through the new data and see if any good cars (separate/pub-sub?)
             try {
-                // TODO: Get a list of "configurations" from somewhere
-                FetchNewData.run(skodaConfiguration())
-                FetchNewData.run(opelConfiguration())
+                CarConfiguration.get().forEach { configuration ->
+                    FetchNewData.run(configuration)
+                }
                 call.respond(HttpStatusCode.OK)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.NotFound)

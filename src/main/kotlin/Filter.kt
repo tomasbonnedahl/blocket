@@ -1,18 +1,18 @@
 import org.jetbrains.exposed.sql.Column
 
-data class Filter2<T>(
+data class Filter<T>(
     val attr: Column<T>,
     val value: T
 )
 
-class FilterFactory2 private constructor(
-    val stringFilters: List<Filter2<String>>,
-    val intFilters: List<Filter2<Int>>
+class FilterWrapper private constructor(
+    val stringFilters: List<Filter<String>>,
+    val intFilters: List<Filter<Int>>
 ) {
     companion object {
-        fun of(values: List<String?>): FilterFactory2 {
-            val stringFilters = mutableListOf<Filter2<String>>()
-            val intFilters = mutableListOf<Filter2<Int>>()
+        fun of(values: List<String?>): FilterWrapper {
+            val stringFilters = mutableListOf<Filter<String>>()
+            val intFilters = mutableListOf<Filter<Int>>()
 
             values.forEach { value ->
                 when (value) {
@@ -28,7 +28,7 @@ class FilterFactory2 private constructor(
                             try {
                                 val intValue = value.toInt()
                                 intFilters.add(
-                                    Filter2(Car.model_year, intValue)
+                                    Filter(Car.model_year, intValue)
                                 )
                             } catch (e: NumberFormatException) {
                                 throw Exception("Unknown attribute for {$value}")
@@ -37,11 +37,11 @@ class FilterFactory2 private constructor(
                     }
                 }
             }
-            return FilterFactory2(stringFilters, intFilters)
+            return FilterWrapper(stringFilters, intFilters)
         }
 
-        private fun createStringFilter(attr: Column<String>, value: String): Filter2<String> {
-            return Filter2(attr, value.capitalize())
+        private fun createStringFilter(attr: Column<String>, value: String): Filter<String> {
+            return Filter(attr, value.capitalize())
         }
 
     }

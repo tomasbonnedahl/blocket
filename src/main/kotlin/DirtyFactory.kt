@@ -3,7 +3,7 @@ import com.google.cloud.datastore.DatastoreOptions
 // TODO: Interface to factory?
 object DirtyFactory {
     init {
-        // TODO: Move to a separate class
+        // TODO: Move to a separate class? Best practise?
         NewDbSettings.init(databaseConfig())
     }
 

@@ -1,6 +1,5 @@
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.insert
@@ -13,7 +12,7 @@ import java.time.LocalDate
 interface Repo {
     fun write(domainCar: DomainCar)
     fun getCars(): List<DomainCar>
-    fun getCars(brand: String, filterClass: FilterFactory2): List<DomainCar>  // TODO: Enum instead of string?
+    fun getCars(brand: String, filterClass: FilterWrapper): List<DomainCar>  // TODO: Enum instead of string?
     fun removeAll()
 }
 
@@ -76,7 +75,7 @@ class NewDatabaseImpl : Repo {
 
     override fun getCars(
         brand: String,
-        filterClass: FilterFactory2
+        filterClass: FilterWrapper
     ): List<DomainCar> {
         return transaction {
             val query = Car.select {
