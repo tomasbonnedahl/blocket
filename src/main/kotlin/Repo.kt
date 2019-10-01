@@ -68,8 +68,7 @@ class NewDatabaseImpl : Repo {
 
     override fun getCars(): List<DomainCar> {
         return transaction {
-            // TODO: Sort order outside this method
-            Car.selectAll().orderBy(Car.milage to SortOrder.ASC).map {
+            Car.selectAll().map {
                 toDomainCar(it)
             }
         }

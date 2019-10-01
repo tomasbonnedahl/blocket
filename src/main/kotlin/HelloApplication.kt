@@ -42,24 +42,14 @@ fun Application.main() {
 //            call.respondFile(File("./index.html"))
         }
 
-        // TODO: Varargs? Check documentation
-        get("/json-data/{brand?}/{filter1?}/{filter2?}/{filter3?}") {
+        get("/json-data/{brand?}/{param...}") {
             val brand = call.parameters["brand"]
-            println("brand = ${brand}")
-            val filter1 = call.parameters["filter1"]
-            val filter2 = call.parameters["filter2"]
-            println("/json-data/, filter1 = ${filter1}")
-            println("/json-data/, filter2 = ${filter2}")
-
-            val filterParams = listOf(
-                call.parameters["filter1"],
-                call.parameters["filter2"],
-                call.parameters["filter3"]
-            )
-
+            val filterParams = call.parameters.getAll("param") ?: emptyList<String?>()
             val filterClass = FilterFactory2.of(filterParams)
             try {
-                val cars = JsonGetter(DirtyFactory.newDb()).carDatas(brand, filterClass)
+                val cars = JsonGetter(
+                    DirtyFactory.newDb()
+                ).carDatas(brand, filterClass)
                 call.respond(cars)
             } catch (e: java.lang.Exception) {
                 println("Error in /json-data: ${e}")
@@ -67,7 +57,7 @@ fun Application.main() {
             }
         }
 
-        get("/{brand}/{filter1?}/{filter2?}/{filter3?}") {
+        get("/{brand}/{param...}") {
             call.respondFile(File("./index.html"))
         }
 
@@ -89,7 +79,9 @@ fun Application.main() {
 
         get("/list-all-cars") {
             val db = DirtyFactory.newDb()
-            val carsByDateAdded = db.getCars().groupBy { car ->
+            val carsByDateAdded = db.getCars().sortedBy {
+                it.milage
+            }.groupBy { car ->
                 car.date_added
             }.toSortedMap(reverseOrder())
             call.respond(carsByDateAdded)
