@@ -1,3 +1,21 @@
+package configuration
+
+import application.Above100kPrice
+import application.BrandField
+import application.DateAddedField
+import application.FetchAndWriteConfiguration
+import application.FetchConfiguration
+import application.Field
+import application.FuelField
+import application.GearboxField
+import application.MilageField
+import application.NoRsModel
+import application.PriceExists
+import application.PriceField
+import application.TitleField
+import application.UrlField
+import application.WriteConfiguration
+
 fun commonFields2(): Map<String, Field> {
     return mapOf(
         "title" to TitleField(),
@@ -56,15 +74,15 @@ fun opelWriteConfiguration(): WriteConfiguration {
     )
 }
 
-fun skodaConfiguration(): Configuration {
-    return Configuration(
+fun skodaConfiguration(): FetchAndWriteConfiguration {
+    return FetchAndWriteConfiguration(
         skodaFetchConfiguration(),
         skodaWriteConfiguration()
     )
 }
 
-fun opelConfiguration(): Configuration {
-    return Configuration(
+fun opelConfiguration(): FetchAndWriteConfiguration {
+    return FetchAndWriteConfiguration(
         opelFetchConfiguration(),
         opelWriteConfiguration()
     )

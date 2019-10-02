@@ -1,3 +1,5 @@
+package db
+
 import org.jetbrains.exposed.sql.Column
 
 data class Filter<T>(
@@ -16,7 +18,8 @@ class FilterWrapper private constructor(
 
             values.forEach { value ->
                 when (value) {
-                    null -> {}  // Do nothing
+                    null -> {
+                    }  // Do nothing
                     else -> when (value.toLowerCase()) {
                         "diesel", "bensin" -> stringFilters.add(
                             createStringFilter(Car.fuel, value)
@@ -43,6 +46,5 @@ class FilterWrapper private constructor(
         private fun createStringFilter(attr: Column<String>, value: String): Filter<String> {
             return Filter(attr, value.capitalize())
         }
-
     }
 }

@@ -1,3 +1,5 @@
+package application
+
 import org.jsoup.nodes.Element
 import java.time.LocalDate
 
@@ -9,31 +11,31 @@ interface Field {
 
 interface IntField : Field {
     override fun parseString(element: Element): String {
-        throw NotImplementedError("parseString() not implemented on IntField")
+        throw NotImplementedError("parseString() not implemented on application.IntField")
     }
 
     override fun parseDate(element: Element): LocalDate {
-        throw NotImplementedError("parseDate() not implemented on IntField")
+        throw NotImplementedError("parseDate() not implemented on application.IntField")
     }
 }
 
 interface StringField : Field {
     override fun parseInt(element: Element): Int {
-        throw NotImplementedError("parseInt() not implemented on StringField")
+        throw NotImplementedError("parseInt() not implemented on application.StringField")
     }
 
     override fun parseDate(element: Element): LocalDate {
-        throw NotImplementedError("parseDate() not implemented on StringField")
+        throw NotImplementedError("parseDate() not implemented on application.StringField")
     }
 }
 
 interface DateField : Field {
     override fun parseInt(element: Element): Int {
-        throw NotImplementedError("parseInt() not implemented on DateField")
+        throw NotImplementedError("parseInt() not implemented on application.DateField")
     }
 
     override fun parseString(element: Element): String {
-        throw NotImplementedError("parseString() not implemented on DateField")
+        throw NotImplementedError("parseString() not implemented on application.DateField")
     }
 }
 
@@ -64,7 +66,7 @@ class MilageField : IntField {
     }
 }
 
-class PriceField: IntField {
+class PriceField : IntField {
     override fun parseInt(element: Element): Int {
         return try {
             element.select("p.list_price").text().substringBefore("kr").replace(" ", "").toInt()
@@ -74,13 +76,13 @@ class PriceField: IntField {
     }
 }
 
-class UrlField: StringField {
+class UrlField : StringField {
     override fun parseString(element: Element): String {
         return element.select("h1.h5").select("a[href]").attr("href")
     }
 }
 
-// TODO: How to connect to different urls when the Field is stand-alone?
+// TODO: How to connect to different urls when the application.Field is stand-alone?
 class ModelYearField(val modelYear: Int) : IntField {
     override fun parseInt(element: Element): Int {
         return modelYear

@@ -1,3 +1,5 @@
+package application
+
 class FetchConfiguration(
     val baseUrl: String,
     val section: String,
@@ -24,7 +26,7 @@ class FetchConfiguration(
     }
 
     fun getFieldByName(name: String): Field {
-//        ModelYearField(2018)
+//        application.ModelYearField(2018)
         return fieldByName[name]!!  // TODO: Solve in a better way...
     }
 }

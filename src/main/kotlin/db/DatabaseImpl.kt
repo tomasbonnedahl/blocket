@@ -1,3 +1,7 @@
+package db
+
+import application.Repo
+import domain.DomainCar
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.andWhere
@@ -8,13 +12,6 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
 import java.time.LocalDate
-
-interface Repo {
-    fun write(domainCar: DomainCar)
-    fun getCars(): List<DomainCar>
-    fun getCars(brand: String, filterClass: FilterWrapper): List<DomainCar>  // TODO: Enum instead of string?
-    fun removeAll()
-}
 
 data class DatabaseConfig(
     val user: String,

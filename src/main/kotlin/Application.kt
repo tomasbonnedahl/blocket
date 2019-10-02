@@ -1,3 +1,6 @@
+import application.FetchNewData
+import db.FilterWrapper
+import configuration.CarConfiguration
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -12,6 +15,7 @@ import io.ktor.response.respondFile
 import io.ktor.response.respondRedirect
 import io.ktor.routing.get
 import io.ktor.routing.routing
+import view.ViewCarsFactory
 import java.io.File
 import java.text.DateFormat
 
@@ -46,9 +50,11 @@ fun Application.main() {
             val filterParams = call.parameters.getAll("param") ?: emptyList<String?>()
             val filterClass = FilterWrapper.of(filterParams)
             try {
-                val cars = JsonGetter(
-                    DirtyFactory.newDb()
-                ).carDatas(brand, filterClass)
+                val cars = ViewCarsFactory.of(
+                    DirtyFactory.newRepo(),
+                    brand,
+                    filterClass
+                )
                 call.respond(cars)
             } catch (e: java.lang.Exception) {
                 println("Error in /json-data: ${e}")
@@ -73,11 +79,11 @@ fun Application.main() {
         }
 
         get("/remove-all-entries") {
-            DirtyFactory.newDb().removeAll()
+            DirtyFactory.newRepo().removeAll()
         }
 
         get("/list-all-cars") {
-            val db = DirtyFactory.newDb()
+            val db = DirtyFactory.newRepo()
             val carsByDateAdded = db.getCars().sortedBy {
                 it.milage
             }.groupBy { car ->

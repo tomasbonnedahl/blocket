@@ -1,4 +1,14 @@
+import application.FetchConfiguration
+import application.Repo
+import application.WriteConfiguration
 import com.google.cloud.datastore.DatastoreOptions
+import db.DatabaseConfig
+import db.NewDatabaseImpl
+import db.NewDbSettings
+import fetch.Fetcher
+import fetch.FetcherImpl
+import write.Writer
+import write.WriterImpl
 
 // TODO: Interface to factory?
 object DirtyFactory {
@@ -7,15 +17,15 @@ object DirtyFactory {
         NewDbSettings.init(databaseConfig())
     }
 
-    fun newFetcher(fetchConfiguration: FetchConfiguration): NewFetcher {
-        return NewFetcherImpl(fetchConfiguration)
+    fun newFetcher(fetchConfiguration: FetchConfiguration): Fetcher {
+        return FetcherImpl(fetchConfiguration)
     }
 
-    fun newWriter(writeConfiguration: WriteConfiguration): NewWriter {
-        return NewWriterImpl(writeConfiguration, newDb())
+    fun newWriter(writeConfiguration: WriteConfiguration): Writer {
+        return WriterImpl(writeConfiguration, newRepo())
     }
 
-    fun newDb(): Repo {
+    fun newRepo(): Repo {
         return NewDatabaseImpl()
     }
 

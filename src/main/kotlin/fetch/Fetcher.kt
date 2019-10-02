@@ -1,10 +1,14 @@
+package fetch
+
+import application.FetchConfiguration
+import domain.DomainCar
 import org.jsoup.Jsoup
 
-interface NewFetcher {
+interface Fetcher {
     fun fetch(): List<DomainCar>
 }
 
-class NewFetcherImpl(val config: FetchConfiguration) : NewFetcher {
+class FetcherImpl(val config: FetchConfiguration) : Fetcher {
     override fun fetch(): List<DomainCar> {
         return config.years().flatMap { year ->
             val doc = Jsoup.connect(config.urlForYear(year)).get()
