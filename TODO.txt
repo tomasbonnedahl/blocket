@@ -1,27 +1,22 @@
-Make it work:
+MIW:
 - Move DB init to a separate class outside of DirtyFactory
-- Add to Github
 - Do something when zero cars are returned
 
-Make it good:
-- Proper exclude classes instead of if:ing
-
-Make it fast:
-- Fix URL stored in db(?) and in tooltip, post-fixed by something (4_87333801.htm?ca\u003d11\u0026w\u003d2)
+MIG:
 - Will kotlin "object" only instantiate one of the class but execute the
     methods each time they are called? (For factory). Only want one db instance.
     How to disconnect the db gracefully?
+- Fix URL stored in db(?) and in tooltip, post-fixed by something (4_87333801.htm?ca\u003d11\u0026w\u003d2)
 - Change main to first instantiate factory and then call the routing thing
 - Fix X axis scale in graph (same distance for different lengths)
     Either by adjusting the bars (probably a setting in the graph lib), or
     Calculating a reasonable average based on lowest milage (zero?) and maximum milage
     Solution: Allow viewing both a scatter plot (default) and a line plot
     Use scatter plot for the time being
-- Use a data class with the data we want in the JSON and seralize that object
+- Use a data class with the data we want in the JSON and serialize that object
     using JacksonJSON?
     https://github.com/ktorio/ktor-samples/blob/master/feature/gson/src/GsonApplication.kt
     https://github.com/ktorio/ktor-samples/blob/master/feature/jackson/src/JacksonApplication.kt
-- Add /{brand} (e.g. /skoda, /opel) and /skoda/diesel, /skoda/2018/diesel
 - Use messaging/events/pub-sub to start the "e-mail new cars" after the
     fetching job completes
     https://codelabs.developers.google.com/codelabs/cloud-spring-cloud-gcp-kotlin/#0
@@ -32,7 +27,5 @@ Make it fast:
     https://cloud.google.com/appengine/docs/standard/java/config/cronref-yaml
 - Use DAO (ORM)
     https://www.baeldung.com/kotlin-exposed-persistence
-- Add to Github?
 
-Next:
-- Netflix/Imdb
+MIF:
