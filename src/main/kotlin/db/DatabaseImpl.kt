@@ -12,7 +12,6 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
-import view.FilterAttribute
 import view.FilterEnum
 import java.time.LocalDate
 
@@ -72,32 +71,10 @@ class NewDatabaseImpl : Repo {
             }
         }
     }
-//
-//    private fun columnAndStringFromFilter(filter: FilterEnum): StringColumnAndValue {
-//        return when (filter) {
-//            FilterEnum.DIESEL, FilterEnum.BENSIN -> StringColumnAndValue(Car.fuel,  filter.text)
-//            FilterEnum.MANUELL, FilterEnum.AUTOMAT -> StringColumnAndValue(Car.gearbox, filter.text)
-//        }
-//    }
-
-    private fun columnAndStringFromFilter2(filter: FilterEnum): GenericColumnAndValue<String> {
-        return when (filter) {
-            FilterEnum.DIESEL, FilterEnum.BENSIN -> GenericColumnAndValue(Car.fuel, filter.text)
-            FilterEnum.MANUELL, FilterEnum.AUTOMAT -> GenericColumnAndValue(Car.gearbox, filter.text)
-        }
-    }
-
-//    private fun columnAndInt(value: Int): IntColumnAndValue {
-//        return IntColumnAndValue(Car.model_year, value)
-//    }
-
-    private fun columnAndInt2(value: Int): GenericColumnAndValue<Int> {
-        return GenericColumnAndValue(Car.model_year, value)
-    }
 
     override fun getCars(
         brand: String,
-        filters: List<FilterAttribute<Any>>
+        filters: List<FilterEnum>
     ): List<DomainCar> {
         return transaction {
             val query = Car.select {
@@ -106,22 +83,27 @@ class NewDatabaseImpl : Repo {
 
             // Add filters to query
             filters.forEach { filter ->
-                when (filter.attr) {
-                    is FilterEnum -> {
-                        val columnAndString = columnAndStringFromFilter2(filter.attr)
-                        query.andWhere {
-                            columnAndString.column eq columnAndString.value.capitalize()
-                        }
-                    }
-                    is Int -> {
-                        val columnAndInt = columnAndInt2(filter.attr.toInt())
+                when (filter) {
+                    FilterEnum.MODEL_YEAR -> {
+                        val columnAndInt = DbColumnAndValue(Car.model_year, filter.text.toInt())
                         query.andWhere {
                             columnAndInt.column eq columnAndInt.value
                         }
                     }
+                    FilterEnum.DIESEL, FilterEnum.BENSIN -> {
+                        val columnAndString = DbColumnAndValue(Car.fuel, filter.text)
+                        query.andWhere {
+                            columnAndString.column eq columnAndString.value.capitalize()
+                        }
+                    }
+                    FilterEnum.MANUELL, FilterEnum.AUTOMAT -> {
+                        val columnAndString = DbColumnAndValue(Car.gearbox, filter.text)
+                        query.andWhere {
+                            columnAndString.column eq columnAndString.value.capitalize()
+                        }
+                    }
                 }
             }
-
             query.map { toDomainCar(it) }
         }
     }
@@ -147,18 +129,8 @@ class NewDatabaseImpl : Repo {
         )
     }
 }
-//
-//private data class StringColumnAndValue(
-//    val column: Column<String>,
-//    val str: String
-//)
-//
-//private data class IntColumnAndValue(
-//    val column: Column<Int>,
-//    val value: Int
-//)
 
-private data class GenericColumnAndValue<T>(
+private data class DbColumnAndValue<T>(
     val column: Column<T>,
     val value: T
 )

@@ -14,11 +14,12 @@ data class ViewCars(
 )
 
 // TODO: Move to repo file
-enum class FilterEnum(val text: String) {
+enum class FilterEnum(var text: String) {
     DIESEL("Diesel"),
     BENSIN("Bensin"),
     MANUELL("Manuell"),
-    AUTOMAT("Automat")
+    AUTOMAT("Automat"),
+    MODEL_YEAR("")
 }
 
 // TODO: Move to repo file
@@ -35,7 +36,7 @@ class ViewCarsFactory {
         ): ViewCars {
 
             val filters = filterStrings.mapNotNull {
-                FilterAttribute(thingFromString(it!!))
+                enumFromString(it!!)
             }
 
             val cars = when (brand) {
@@ -54,13 +55,17 @@ class ViewCarsFactory {
             return ViewCars(cars)
         }
 
-        private fun thingFromString(str: String): Any {
+        private fun enumFromString(str: String): FilterEnum {
             return when (str.toLowerCase()) {
                 "diesel" -> FilterEnum.DIESEL
                 "bensin" -> FilterEnum.BENSIN
                 "manuell" -> FilterEnum.MANUELL
                 "automat" -> FilterEnum.AUTOMAT
-                else -> str.toInt()
+                else -> {
+                    val e = FilterEnum.MODEL_YEAR
+                    e.text = str
+                    e
+                }
             }
         }
 
