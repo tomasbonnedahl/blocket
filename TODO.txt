@@ -3,6 +3,7 @@ MIW:
 - Do something when zero cars are returned
 
 MIG:
+- More refactor, e.g in which package classes are placed and names
 - Will kotlin "object" only instantiate one of the class but execute the
     methods each time they are called? (For factory). Only want one db instance.
     How to disconnect the db gracefully?
