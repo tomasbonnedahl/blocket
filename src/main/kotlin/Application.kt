@@ -1,5 +1,4 @@
 import application.FetchNewData
-import db.FilterWrapper
 import configuration.CarConfiguration
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -48,12 +47,11 @@ fun Application.main() {
         get("/json-data/{brand?}/{param...}") {
             val brand = call.parameters["brand"]
             val filterParams = call.parameters.getAll("param") ?: emptyList<String?>()
-            val filterClass = FilterWrapper.of(filterParams)
             try {
                 val cars = ViewCarsFactory.of(
                     DirtyFactory.newRepo(),
                     brand,
-                    filterClass
+                    filterParams
                 )
                 call.respond(cars)
             } catch (e: java.lang.Exception) {

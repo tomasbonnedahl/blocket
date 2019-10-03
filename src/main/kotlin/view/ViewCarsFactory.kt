@@ -1,6 +1,5 @@
 package view
 
-import db.FilterWrapper
 import application.Repo
 import domain.DomainCar
 
@@ -14,16 +13,34 @@ data class ViewCars(
     val dataByMonth: Map<String, List<CarViewModel>>
 )
 
+// TODO: Move to repo file
+enum class FilterEnum(val text: String) {
+    DIESEL("Diesel"),
+    BENSIN("Bensin"),
+    MANUELL("Manuell"),
+    AUTOMAT("Automat")
+}
+
+// TODO: Move to repo file
+data class FilterAttribute<T>(
+    val attr: T
+)
+
 class ViewCarsFactory {
     companion object {
         fun of(
             repo: Repo,
             brand: String?,
-            filterClass: FilterWrapper
+            filterStrings: List<String?>
         ): ViewCars {
+
+            val filters = filterStrings.mapNotNull {
+                FilterAttribute(thingFromString(it!!))
+            }
+
             val cars = when (brand) {
                 null -> repo.getCars()
-                else -> repo.getCars(brand, filterClass)
+                else -> repo.getCars(brand, filters)
             }.sortedBy { car ->
                 car.milage
             }.groupBy { car ->
@@ -35,6 +52,16 @@ class ViewCarsFactory {
             }.toMap()
 
             return ViewCars(cars)
+        }
+
+        private fun thingFromString(str: String): Any {
+            return when (str.toLowerCase()) {
+                "diesel" -> FilterEnum.DIESEL
+                "bensin" -> FilterEnum.BENSIN
+                "manuell" -> FilterEnum.MANUELL
+                "automat" -> FilterEnum.AUTOMAT
+                else -> str.toInt()
+            }
         }
 
         private fun toViewModel(car: DomainCar): CarViewModel {

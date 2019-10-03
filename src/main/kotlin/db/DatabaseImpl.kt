@@ -2,6 +2,7 @@ package db
 
 import application.Repo
 import domain.DomainCar
+import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.andWhere
@@ -11,6 +12,8 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
+import view.FilterAttribute
+import view.FilterEnum
 import java.time.LocalDate
 
 data class DatabaseConfig(
@@ -69,25 +72,56 @@ class NewDatabaseImpl : Repo {
             }
         }
     }
+//
+//    private fun columnAndStringFromFilter(filter: FilterEnum): StringColumnAndValue {
+//        return when (filter) {
+//            FilterEnum.DIESEL, FilterEnum.BENSIN -> StringColumnAndValue(Car.fuel,  filter.text)
+//            FilterEnum.MANUELL, FilterEnum.AUTOMAT -> StringColumnAndValue(Car.gearbox, filter.text)
+//        }
+//    }
+
+    private fun columnAndStringFromFilter2(filter: FilterEnum): GenericColumnAndValue<String> {
+        return when (filter) {
+            FilterEnum.DIESEL, FilterEnum.BENSIN -> GenericColumnAndValue(Car.fuel, filter.text)
+            FilterEnum.MANUELL, FilterEnum.AUTOMAT -> GenericColumnAndValue(Car.gearbox, filter.text)
+        }
+    }
+
+//    private fun columnAndInt(value: Int): IntColumnAndValue {
+//        return IntColumnAndValue(Car.model_year, value)
+//    }
+
+    private fun columnAndInt2(value: Int): GenericColumnAndValue<Int> {
+        return GenericColumnAndValue(Car.model_year, value)
+    }
 
     override fun getCars(
         brand: String,
-        filterClass: FilterWrapper
+        filters: List<FilterAttribute<Any>>
     ): List<DomainCar> {
         return transaction {
             val query = Car.select {
                 Car.brand eq brand
             }
-            filterClass.stringFilters.forEach { filter ->
-                query.andWhere {
-                    filter.attr eq filter.value
+
+            // Add filters to query
+            filters.forEach { filter ->
+                when (filter.attr) {
+                    is FilterEnum -> {
+                        val columnAndString = columnAndStringFromFilter2(filter.attr)
+                        query.andWhere {
+                            columnAndString.column eq columnAndString.value.capitalize()
+                        }
+                    }
+                    is Int -> {
+                        val columnAndInt = columnAndInt2(filter.attr.toInt())
+                        query.andWhere {
+                            columnAndInt.column eq columnAndInt.value
+                        }
+                    }
                 }
             }
-            filterClass.intFilters.forEach { filter ->
-                query.andWhere {
-                    filter.attr eq filter.value
-                }
-            }
+
             query.map { toDomainCar(it) }
         }
     }
@@ -113,3 +147,18 @@ class NewDatabaseImpl : Repo {
         )
     }
 }
+//
+//private data class StringColumnAndValue(
+//    val column: Column<String>,
+//    val str: String
+//)
+//
+//private data class IntColumnAndValue(
+//    val column: Column<Int>,
+//    val value: Int
+//)
+
+private data class GenericColumnAndValue<T>(
+    val column: Column<T>,
+    val value: T
+)
